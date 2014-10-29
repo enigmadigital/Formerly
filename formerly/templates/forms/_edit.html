@@ -1,0 +1,174 @@
+{% extends "_layouts/cp" %}
+
+{% macro questionMarkup(id, question) %}
+	{% import '_includes/forms' as forms %}
+
+	<div class="question matrixblock" data-id="{{ id }}">
+		<div class="actions">
+			<a class="move icon" role="button" title="Reorder"></a>
+			<a class="delete icon" role="button" title="Actions"></a>
+		</div>
+
+		{% if question and question.getAllErrors() | length %}
+			<ul>
+				{% for error in question.getAllErrors() %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
+		<div class="fields">
+			{{ forms.textField({
+				label: 'Name'|t,
+				id: "questions-#{id}-name",
+				name: "questions[#{id}][name]",
+				value: question ? question.name,
+				errors: question ? question.getErrors('name')
+			}) }}
+
+			{{ forms.checkbox({
+				label: 'Required'|t,
+				id: "questions-#{id}-required",
+				name: "questions[#{id}][required]",
+				checked: question ? question.required,
+				errors: question ? question.getErrors('required')
+			}) }}
+
+			{{ forms.selectField({
+				label: 'Type'|t,
+				id: "questions-#{id}-type",
+				name: "questions[#{id}][type]",
+				value: question ? question.type,
+				errors: question ? question.getErrors('type'),
+				options: {
+					PlainText: 'Text',
+					MultilineText: 'Multiline Text',
+					Dropdown: 'Dropdown',
+					RadioButtons: 'Radio Buttons',
+					Checkboxes: 'Checkboxes'
+				}
+			}) }}
+
+			<div class="options">
+				{{ forms.editableTableField({
+					label: 'Options',
+					id: "questions-#{id}-options",
+					name: "questions[#{id}][options]",
+					cols: {
+						label: {
+							heading: 'Label',
+							type: 'singleline',
+							width: '100%'
+						},
+						default: {
+							heading: 'Default',
+							type: 'checkbox'
+						}
+					},
+					rows: question ? question.options
+				}) }}
+			</div>
+		</div>
+	</div>
+{% endmacro %}
+
+{% import _self as self %}
+{% import '_includes/forms' as forms %}
+
+{% block content %}
+	<form method="post" accept-charset="UTF-8" data-saveshortcut="1">
+		<input type="hidden" name="action" value="formerly/forms/saveForm">
+		<input type="hidden" name="redirect" value="formerly/forms">
+
+		{% if form.id %}
+			<input type="hidden" name="formId" value="{{ form.id }}">
+		{% endif %}
+
+		{{ forms.textField({
+			first: true,
+			label: 'Name'|t,
+			instructions: 'What this form will be called in the CP.'|t,
+			id: 'name',
+			name: 'name',
+			value: form.name,
+			errors: form.getErrors('name'),
+			autofocus: true,
+			required: true,
+			translatable: true
+		}) }}
+
+		{{ forms.textField({
+			label: 'Handle'|t,
+			instructions: 'How you’ll refer to this form in the templates.'|t,
+			id: 'handle',
+			class: 'code',
+			name: 'handle',
+			value: form.handle,
+			errors: form.getErrors('handle'),
+			required: true
+		}) }}
+
+		<hr>
+
+		<h2>Email</h2>
+
+		{{ forms.textField({
+			label: 'To address'|t,
+			instructions: 'Email address to send form submissions to.'|t,
+			id: 'toAddress',
+			name: 'toAddress',
+			value: form.toAddress,
+			errors: form.getErrors('toAddress')
+		}) }}
+
+		{{ forms.textField({
+			label: 'From address'|t,
+			instructions: 'Email address which form submission emails will be sent as.'|t,
+			id: 'fromAddress',
+			name: 'fromAddress',
+			value: form.fromAddress,
+			errors: form.getErrors('fromAddress')
+		}) }}
+
+		{{ forms.textField({
+			label: 'Subject'|t,
+			instructions: 'Subject used for form submission emails.'|t,
+			id: 'subject',
+			name: 'subject',
+			value: form.subject,
+			errors: form.getErrors('subject')
+		}) }}
+
+		<hr>
+
+		<h2>Questions</h2>
+
+		<div id="questions" class="blocks">
+			{% for questionId, question in questions %}
+				{{ self.questionMarkup(questionId, question) }}
+			{% endfor %}
+		</div>
+
+		<div class="buttons">
+			<a id="add_question" href="javascript:void(0)" class="btn add icon">Add question</a>
+		</div>
+
+		<hr>
+
+		<div class="buttons">
+			<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+		</div>
+	</form>
+
+	<script type="text/template" id="question_template">
+		{{ self.questionMarkup('__QUESTION_ID__') }}
+	</script>
+
+{% endblock %}
+
+{% set js %}
+	{% if not form.handle %}new Craft.HandleGenerator('#name', '#handle');{% endif %}
+{% endset %}
+{% includeJs js %}
+
+{% includeJsResource 'formerly/formerly.js' %}

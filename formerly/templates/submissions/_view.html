@@ -1,0 +1,16 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Submission ' ~ submission %}
+
+{% block content %}
+	<h1></h1>
+	<table class="data fullwidth">
+		<tbody>
+			{% for question in submission.getForm().getQuestions() %}
+				<tr>
+					<th>{{ question.name }}</th>
+					<td>{{ submission[question.handle] }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

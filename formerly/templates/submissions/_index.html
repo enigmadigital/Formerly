@@ -1,0 +1,8 @@
+{% extends '_layouts/elementindex' %}
+{% set title = 'Submissions'|t %}
+{% set elementType = 'Formerly_Submission' %}
+
+{% set tabs = {
+	submissions: { label: 'Submissions'|t, url: url('formerly') },
+	forms:       { label: 'Forms'|t, url: url('formerly/forms') }
+} %}

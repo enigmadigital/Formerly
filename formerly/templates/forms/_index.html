@@ -1,0 +1,49 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Forms'|t %}
+
+{% set tabs = {
+	submissions: { label: "Submissions"|t, url: url('formerly') },
+	forms:       { label: "Forms"|t, url: url('formerly/forms') }
+} %}
+
+{% set selectedTab = 'forms' %}
+
+{% set content %}
+	<div id="noforms" class="{{ forms ? 'hidden' }}">
+		<p>{{ 'No forms exist yet.'|t }}</p>
+	</div>
+
+	{% if forms | length %}
+		<table id="forms" class="data fullwidth collapsible">
+			<thead>
+				<th scope="col">{{ 'Name'|t }}</th>
+				<th scope="col">{{ 'Handle'|t }}</th>
+				<td class="thin"></td>
+			</thead>
+			<tbody>
+				{% for form in forms %}
+					<tr data-id="{{ form.id }}" data-name="{{ form.name|t }}">
+						<th scope="row" data-title="{{ 'Name'|t }}"><a href="{{ url('formerly/forms/' ~ form.id) }}">{{ form.name|t }}</a></th>
+						<td data-title="{{ 'Handle'|t }}"><code>{{ form.handle }}</code></td>
+						<td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}" role="button"></a></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+
+	<div id="newformcontainer" class="buttons">
+		<a href="{{ url('formerly/forms/new') }}" class="btn submit add icon">{{ 'New form'|t }}</a>
+	</div>
+{% endset %}
+
+{% set js %}
+	var adminTable = new Craft.AdminTable({
+		tableSelector: '#forms',
+		noObjectsSelector: '#noforms',
+		newObjectBtnSelector: '#newformcontainer',
+		deleteAction: 'formerly/forms/deleteForm',
+		confirmDeleteMessage: '{{ 'Are you sure you want to delete “{name}” and all its submissions?'|t }}'
+	});
+{% endset %}
+{% includeJs js %}

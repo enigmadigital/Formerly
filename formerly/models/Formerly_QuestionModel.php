@@ -20,7 +20,12 @@ class Formerly_QuestionModel extends BaseModel
 				Formerly_QuestionType::Dropdown,
 				Formerly_QuestionType::RadioButtons,
 				Formerly_QuestionType::Checkboxes,
-				//Formerly_QuestionType::FileUpload
+				//Formerly_QuestionType::FileUpload,
+				Formerly_QuestionType::Email,
+				Formerly_QuestionType::Tel,
+				Formerly_QuestionType::Url,
+				Formerly_QuestionType::Number,
+				Formerly_QuestionType::Date
 			)),
 			'options'       => AttributeType::Mixed,
 			'sortOrder'     => AttributeType::SortOrder

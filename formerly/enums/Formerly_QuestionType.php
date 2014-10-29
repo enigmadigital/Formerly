@@ -9,4 +9,10 @@ class Formerly_QuestionType extends BaseEnum
 	const RadioButtons  = 'RadioButtons';
 	const Checkboxes    = 'Checkboxes';
 	//const FileUpload    = 'FileUpload';
+
+	const Email = 'Email';
+	const Tel = 'Tel';
+	const Url = 'Url';
+	const Number = 'Number';
+	const Date = 'Date';
 }

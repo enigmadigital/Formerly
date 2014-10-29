@@ -313,33 +313,56 @@ class Formerly_FormsService extends BaseApplicationComponent
 
 		switch ($question->type)
 		{
-		case Formerly_QuestionType::PlainText:
-		case Formerly_QuestionType::MultilineText:
+			case Formerly_QuestionType::PlainText:
+			case Formerly_QuestionType::MultilineText:
 
-			$field->type = 'PlainText';
-			$field->settings = array(
-				'multiline' => $question->type == Formerly_QuestionType::MultilineText
-			);
+				$field->type = 'PlainText';
+				$field->settings = array(
+					'multiline' => $question->type == Formerly_QuestionType::MultilineText
+				);
 
-			break;
+				break;
 
-		case Formerly_QuestionType::Dropdown:
-		case Formerly_QuestionType::RadioButtons:
-		case Formerly_QuestionType::Checkboxes:
+			case Formerly_QuestionType::Dropdown:
+			case Formerly_QuestionType::RadioButtons:
+			case Formerly_QuestionType::Checkboxes:
 
-			$field->type = $question->type;
-			$field->settings = array(
-				'options' => $question->options
-			);
+				$field->type = $question->type;
+				$field->settings = array(
+					'options' => $question->options
+				);
 
-			break;
+				break;
 
-		case Formerly_QuestionType::FileUpload:
+			case Formerly_QuestionType::FileUpload:
 
-			// todo
+				// todo
 
-			break;
+				break;
+
+
+
+			case Formerly_QuestionType::Email:
+				// todo
+				break;
+
+			case Formerly_QuestionType::Tel:
+				// todo
+				break;
+
+			case Formerly_QuestionType::Url:
+				// todo
+				break;
+
+			case Formerly_QuestionType::Number:
+				// todo
+				break;
+
+			case Formerly_QuestionType::Date:
+				// todo
+				break;
 		}
+
 
 		return $field;
 	}

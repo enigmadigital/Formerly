@@ -7,7 +7,7 @@ $(function() {
 
 	function toggleOptions($question) {
 		var val = $question.find('select[name*=type]').val();
-		var isSimple = ['PlainText', 'MultilineText', 'FileUpload'].indexOf(val) != -1;
+		var isSimple = ['PlainText', 'MultilineText', 'FileUpload', 'Email', 'Tel', 'Url', 'Number', 'Date'].indexOf(val) != -1;
 		$question.find('.options').toggleClass('hidden', isSimple);
 	}
 

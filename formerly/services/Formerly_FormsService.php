@@ -334,32 +334,32 @@ class Formerly_FormsService extends BaseApplicationComponent
 
 				break;
 
-			case Formerly_QuestionType::FileUpload:
+			/*case Formerly_QuestionType::FileUpload:
 
 				// todo
 
-				break;
+				break;*/
 
 
 
 			case Formerly_QuestionType::Email:
-				// todo
+				$field->type = 'PlainText';
 				break;
 
 			case Formerly_QuestionType::Tel:
-				// todo
+				$field->type = 'PlainText';
 				break;
 
 			case Formerly_QuestionType::Url:
-				// todo
+				$field->type = 'PlainText';
 				break;
 
 			case Formerly_QuestionType::Number:
-				// todo
+				$field->type = 'PlainText';
 				break;
 
 			case Formerly_QuestionType::Date:
-				// todo
+				$field->type = 'PlainText';
 				break;
 		}
 

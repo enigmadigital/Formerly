@@ -166,11 +166,10 @@
 									data-val="true"
 								{% endif %}
 								class="text"
-								maxlength="10"
 								pattern="\d{2}\/\d{2}\/\d{4}"
 								placeholder="DD/MM/YYYY"
 								id="{{ question.handle }}"
-								name="questions[{{ question.handle }}]"
+								name="questions[{{ question.handle }}][date]"
 								value="{{ submission is defined ? submission[question.handle] }}">
 
 

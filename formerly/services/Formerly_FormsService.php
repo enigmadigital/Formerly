@@ -215,6 +215,7 @@ class Formerly_FormsService extends BaseApplicationComponent
 		$questionRecord->formId    = $question->formId;
 		$questionRecord->required  = $question->required;
 		$questionRecord->sortOrder = $question->sortOrder;
+		$questionRecord->type      = $question->type;
 
 		$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 		try
@@ -277,28 +278,19 @@ class Formerly_FormsService extends BaseApplicationComponent
 
 		switch ($field->type)
 		{
-		case 'PlainText':
+			case 'Dropdown':
+			case 'RadioButtons':
+			case 'Checkboxes':
 
-			$attributes['type'] = isset($field->settings['multiline']) && $field->settings['multiline']
-				? Formerly_QuestionType::MultilineText
-				: Formerly_QuestionType::PlainText;
+				$attributes['options'] = $field->settings['options'];
 
-			break;
+				break;
 
-		case 'Dropdown':
-		case 'RadioButtons':
-		case 'Checkboxes':
+			case 'Assets':
 
-			$attributes['type']    = $field->type;
-			$attributes['options'] = $field->settings['options'];
+				// todo
 
-			break;
-
-		case 'Assets':
-
-			// todo
-
-			break;
+				break;
 		}
 
 		return $attributes;
@@ -355,11 +347,11 @@ class Formerly_FormsService extends BaseApplicationComponent
 				break;
 
 			case Formerly_QuestionType::Number:
-				$field->type = 'PlainText';
+				$field->type = 'Number';
 				break;
 
 			case Formerly_QuestionType::Date:
-				$field->type = 'PlainText';
+				$field->type = 'Date';
 				break;
 		}
 

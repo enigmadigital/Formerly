@@ -400,6 +400,8 @@ class Formerly_FormsService extends BaseApplicationComponent
 
 		$questions = $this->getQuestionsByFormId($form->id);
 
+		$fields = array();
+
 		foreach ($questions as $question)
 		{
 			$field = new FieldLayoutFieldModel();

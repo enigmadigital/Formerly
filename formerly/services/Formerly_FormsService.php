@@ -51,11 +51,9 @@ class Formerly_FormsService extends BaseApplicationComponent
 		$fieldGroup->name = 'Formerly - '.$form->name;
 
 		// set attributes on record
-		$formRecord->name        = $form->name;
-		$formRecord->handle      = $form->handle;
-		$formRecord->toAddress   = $form->toAddress;
-		$formRecord->fromAddress = $form->fromAddress;
-		$formRecord->subject     = $form->subject;
+		$formRecord->name    = $form->name;
+		$formRecord->handle  = $form->handle;
+		$formRecord->emails  = $form->emails;
 
 		$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 		try

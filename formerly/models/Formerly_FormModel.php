@@ -10,9 +10,7 @@ class Formerly_FormModel extends BaseModel
 			'fieldGroupId'  => AttributeType::Number,
 			'name'          => AttributeType::String,
 			'handle'        => AttributeType::String,
-			'toAddress'     => AttributeType::String,
-			'fromAddress'   => AttributeType::String,
-			'subject'       => AttributeType::String,
+			'emails'        => AttributeType::Mixed,
 		);
 	}
 

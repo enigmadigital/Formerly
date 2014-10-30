@@ -62,47 +62,48 @@ class Formerly_FormsController extends BaseController
 			$form = new Formerly_FormModel();
 		}
 
-		$form->name        = craft()->request->getPost('name');
-		$form->handle      = craft()->request->getPost('handle');
-		$form->toAddress   = craft()->request->getPost('toAddress');
-		$form->fromAddress = craft()->request->getPost('fromAddress');
-		$form->subject     = craft()->request->getPost('subject');
+		$form->name    = craft()->request->getPost('name');
+		$form->handle  = craft()->request->getPost('handle');
+		$form->emails  = craft()->request->getPost('emails');
 
 		$postedQuestions = craft()->request->getPost('questions');
 		$sortOrder = 0;
 
-		foreach ($postedQuestions as $questionId => $postedQuestion)
+		if ($postedQuestions)
 		{
-			$question = craft()->formerly_forms->getQuestionById($questionId);
-
-			if (!$question)
+			foreach ($postedQuestions as $questionId => $postedQuestion)
 			{
-				$question = new Formerly_QuestionModel();
-			}
+				$question = craft()->formerly_forms->getQuestionById($questionId);
 
-			$question->name      = $postedQuestion['name'];
-			$question->handle    = FormerlyHelpers::generateHandle($question->name);
-			$question->required  = (bool) $postedQuestion['required'];
-			$question->type      = $postedQuestion['type'];
-			$question->sortOrder = ++$sortOrder;
-
-			if (isset($postedQuestion['options']))
-			{
-				$options = array();
-
-				foreach ($postedQuestion['options'] as $postedOption)
+				if (!$question)
 				{
-					$options[] = array(
-						'label'   => $postedOption['label'],
-						'value'   => $postedOption['label'],
-						'default' => (bool) $postedOption['default'],
-					);
+					$question = new Formerly_QuestionModel();
 				}
 
-				$question->options = $options;
-			}
+				$question->name      = $postedQuestion['name'];
+				$question->handle    = FormerlyHelpers::generateHandle($question->name);
+				$question->required  = (bool) $postedQuestion['required'];
+				$question->type      = $postedQuestion['type'];
+				$question->sortOrder = ++$sortOrder;
 
-			$questions[$questionId] = $question;
+				if (isset($postedQuestion['options']))
+				{
+					$options = array();
+
+					foreach ($postedQuestion['options'] as $postedOption)
+					{
+						$options[] = array(
+							'label'   => $postedOption['label'],
+							'value'   => $postedOption['label'],
+							'default' => (bool) $postedOption['default'],
+						);
+					}
+
+					$question->options = $options;
+				}
+
+				$questions[$questionId] = $question;
+			}
 		}
 
 		$ok = true;

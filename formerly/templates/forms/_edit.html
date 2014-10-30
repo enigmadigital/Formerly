@@ -80,6 +80,7 @@
 {% import _self as self %}
 {% import '_includes/forms' as forms %}
 
+
 {% block content %}
 	<form method="post" accept-charset="UTF-8" data-saveshortcut="1">
 		<input type="hidden" name="action" value="formerly/forms/saveForm">
@@ -117,31 +118,33 @@
 
 		<h2>Email</h2>
 
-		{{ forms.textField({
-			label: 'To address'|t,
-			instructions: 'Email address to send form submissions to.'|t,
-			id: 'toAddress',
-			name: 'toAddress',
-			value: form.toAddress,
-			errors: form.getErrors('toAddress')
-		}) }}
-
-		{{ forms.textField({
-			label: 'From address'|t,
-			instructions: 'Email address which form submission emails will be sent as.'|t,
-			id: 'fromAddress',
-			name: 'fromAddress',
-			value: form.fromAddress,
-			errors: form.getErrors('fromAddress')
-		}) }}
-
-		{{ forms.textField({
-			label: 'Subject'|t,
-			instructions: 'Subject used for form submission emails.'|t,
-			id: 'subject',
-			name: 'subject',
-			value: form.subject,
-			errors: form.getErrors('subject')
+		{{ forms.editableTableField({
+			label: 'Options',
+			id: 'emails',
+			name: "emails",
+			cols: {
+				to: {
+					heading: 'To',
+					type: 'singleline',
+					width: '100%'
+				},
+				from: {
+					heading: 'From',
+					type: 'singleline',
+					width: '100%'
+				},
+				subject: {
+					heading: 'Subject',
+					type: 'singleline',
+					width: '100%'
+				},
+				body: {
+					heading: 'Body',
+					type: 'multiline',
+					width: '100%'
+				},
+			},
+			rows: form ? form.emails
 		}) }}
 
 		<hr>

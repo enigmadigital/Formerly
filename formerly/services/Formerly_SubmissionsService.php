@@ -12,7 +12,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 	{
 		if ($this->saveSubmission($submission))
 		{
-			$this->sendSubmissionEmail($submission);
+			$this->sendSubmissionEmails($submission);
 			return true;
 		}
 
@@ -63,7 +63,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		return false;
 	}
 
-	public function sendSubmissionEmail(Formerly_SubmissionModel $submission)
+	public function sendSubmissionEmails(Formerly_SubmissionModel $submission)
 	{
 		if (!$submission)
 		{
@@ -72,6 +72,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		$form = $submission->getForm();
 
+		/*
 		if (empty($form->toAddress))
 		{
 			return false;
@@ -96,6 +97,6 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		$email->body = $body;
 
-		craft()->email->sendEmail($email);
+		craft()->email->sendEmail($email);*/
 	}
 }

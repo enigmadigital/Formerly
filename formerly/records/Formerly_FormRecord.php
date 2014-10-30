@@ -13,9 +13,7 @@ class Formerly_FormRecord extends BaseRecord
 		return array(
 			'name'          => array(AttributeType::Name, 'required' => true),
 			'handle'        => array(AttributeType::Handle, 'required' => true),
-			'toAddress'     => AttributeType::String,
-			'fromAddress'   => AttributeType::String,
-			'subject'       => AttributeType::String,
+			'emails'        => AttributeType::Mixed,
 		);
 	}
 

@@ -13,7 +13,6 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		if ($this->saveSubmission($submission))
 		{
 			$this->sendSubmissionEmail($submission);
-
 			return true;
 		}
 
@@ -73,10 +72,15 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		$form = $submission->getForm();
 
+		if(empty($form->toAddress))
+		{
+			return false;
+		}
+
 		$email = new EmailModel();
 		$email->toEmail   = $form->toAddress;
-		$email->fromEmail = $form->fromAddress;
-		$email->subject   = $form->subject;
+		$email->fromEmail = !empty($form->fromAddress) ? $form->fromAddress : craft()->users->getUserById(1)->getAttribute("email");
+		$email->subject   = !empty($form->subject) ? $form->subject : 'Website Enquiry';
 
 		$body = '';
 

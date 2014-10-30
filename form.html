@@ -1,0 +1,119 @@
+<form method="post" accept-charset="utf-8">
+	{{ getCsrfInput() }}
+	<input type="hidden" name="action" value="formerly/submissions/postSubmission">
+	<input type="hidden" name="redirect" value="{{ craft.request.url }}?ok=1">
+	<input type="hidden" name="formId" value="{{ form.id }}">
+
+	<div id="form">
+		<fieldset>
+			<legend>{{ form.name }}</legend>
+
+			{% if craft.request.getQuery('ok') %}
+				<div class="ok">
+					<h3>Message Sent</h3>
+					<p>Thank you for submitting your enquiry. We will be in contact with you shortly</p>
+				</div>
+			{% endif %}
+
+			{% if submission is defined and submission.getAllErrors() | length %}
+				<div class="error">
+					<h3>Please correct the following errors</h3>
+					{% for error in submission.getAllErrors() %}
+						<li>{{ error }}</li>
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			<p class="required"><em>*</em> Denotes a required field</p>
+
+			{% for question in form.getQuestions() %}
+				<div class="f_row">
+					<label for="{{ question.handle }}">
+						{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+					</label>
+
+					{% switch question.type %}
+
+						{% case 'PlainText' %}
+							<input type="text"
+								{% if question.required %}
+									required
+									aria-required="true"
+									data-val-required="'{{ question.name }}' is required"
+									data-val="true"
+								{% endif %}
+								class="text"
+								id="{{ question.handle }}"
+								name="questions[{{ question.handle }}]"
+								value="{{ submission is defined ? submission[question.handle] }}">
+
+						{% case 'MultilineText' %}
+							<textarea
+								{% if question.required %}
+									required
+									aria-required="true"
+									data-val-required="'{{ question.name }}' is required"
+									data-val="true"
+								{% endif %}
+								class="text"
+								cols="20" rows="2"
+								id="{{ question.handle }}"
+								name="questions[{{ question.handle }}]">{{ submission is defined ? submission[question.handle] }}</textarea>
+
+						{% case 'Dropdown' %}
+							<select
+								{% if question.required %}
+									required
+									aria-required="true"
+									data-val-required="'{{ question.name }}' is required"
+									data-val="true"
+								{% endif %}
+								id="{{ question.handle }}"
+								name="questions[{{ question.handle }}]">
+								{% for option in question.options %}
+									<option {{ submission is defined and submission[question.handle] == option.name ? 'selected' }}>
+										{{ option.name }}
+									</option>
+								{% endfor %}
+							</select>
+
+						{% case 'RadioButtons' %}
+							<ul>
+								{% for option in question.options %}
+									<li>
+										<input type="radio"
+											id="{{ question.handle ~ loop.index }}"
+											name="questions[{{ question.handle }}]"
+											value="{{ option.name }}"
+											{{ submission is defined and submission[question.handle] == option.name ? 'checked' }}>
+										<label for="{{ question.handle ~ loop.index }}">{{ option.name }}</label>
+									</li>
+								{% endfor %}
+							</ul>
+
+						{% case 'Checkboxes' %}
+							<ul>
+								{% for option in question.options %}
+									<li>
+										<input type="checkbox"
+											id="{{ question.handle ~ loop.index }}"
+											name="questions[{{ question.handle }}]"
+											value="{{ option.name }}"
+											{{ submission is defined and submission[question.handle] == option.name ? 'checked' }}>
+										<label for="{{ question.handle ~ loop.index }}">{{ option.name }}</label>
+									</li>
+								{% endfor %}
+							</ul>
+
+					{% endswitch %}
+
+				</div>
+			{% endfor %}
+
+			<div class="btns">
+				<input type="submit" class="submit action" id="btnSubmit" value="Submit" name="btnSubmit">
+			</div>
+
+		</fieldset>
+	</div>
+</form>

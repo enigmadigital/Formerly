@@ -72,22 +72,21 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		$form = $submission->getForm();
 
-		if($form->emails !== null)
+		if ($form->emails !== null)
 		{
-			foreach($form->emails as $emailDef)
+			foreach ($form->emails as $emailDef)
 			{
-				if(empty($emailDef['to'])) continue;
+				if (empty($emailDef['to'])) continue;
 
 				$email = new EmailModel();
 				$email->toEmail = $emailDef['to'];
 				$email->subject = !empty($emailDef['subject']) ? $emailDef['subject'] : 'Website Enquiry';
 
-				if(!empty($emailDef['from'])) $email->fromEmail = $emailDef['from'];
+				if (!empty($emailDef['from'])) $email->fromEmail = $emailDef['from'];
 
-				if(!empty($emailDef['body']))
+				if (!empty($emailDef['body']))
 				{
-					// todo: Need to Twig the questions in the body area somehow.
-					$email->body = $emailDef['body'];
+					$email->body = $this->_renderSubmissionTemplate($emailDef['body'], $submission);
 				}
 				else
 				{
@@ -102,11 +101,21 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 				FormerlyPlugin::log($email->body);
 
-				if(!empty($email->body))
+				if (!empty($email->body))
 				{
 					craft()->email->sendEmail($email);
 				}
 			}
 		}
+	}
+
+	private function _renderSubmissionTemplate($template, $submission)
+	{
+		$formHandle = $submission->getForm()->handle;
+
+		$formattedTemplate = preg_replace('/(?<![\{\%])\{(?![\{\%])/', '{'.$formHandle.'_', $template);
+		$formattedTemplate = preg_replace('/(?<![\}\%])\}(?![\}\%])/', '}', $formattedTemplate);
+
+		return craft()->templates->renderObjectTemplate($formattedTemplate, $submission);
 	}
 }

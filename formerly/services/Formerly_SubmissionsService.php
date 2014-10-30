@@ -72,31 +72,41 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		$form = $submission->getForm();
 
-		/*
-		if (empty($form->toAddress))
+		if($form->emails !== null)
 		{
-			return false;
+			foreach($form->emails as $emailDef)
+			{
+				if(empty($emailDef['to'])) continue;
+
+				$email = new EmailModel();
+				$email->toEmail = $emailDef['to'];
+				$email->subject = !empty($emailDef['subject']) ? $emailDef['subject'] : 'Website Enquiry';
+
+				if(!empty($emailDef['from'])) $email->fromEmail = $emailDef['from'];
+
+				if(!empty($emailDef['body']))
+				{
+					// todo: Need to Twig the questions in the body area somehow.
+					$email->body = $emailDef['body'];
+				}
+				else
+				{
+					$body = '';
+					foreach ($form->getQuestions() as $question)
+					{
+						$body .= $question->name . "\n: " . $submission[$question->handle] . "\n\n";
+					}
+
+					$email->body = $body;
+				}
+
+				FormerlyPlugin::log($email->body);
+
+				if(!empty($email->body))
+				{
+					craft()->email->sendEmail($email);
+				}
+			}
 		}
-
-		$email = new EmailModel();
-		$email->toEmail = $form->toAddress;
-		$email->subject = !empty($form->subject) ? $form->subject : 'Website Enquiry';
-
-
-		if (!empty($form->fromAddress))
-		{
-			$email->fromEmail = $form->fromAddress;
-		}
-
-		$body = '';
-
-		foreach ($form->getQuestions() as $question)
-		{
-			$body .= $question->name."\n: ".$submission[$question->handle]."\n\n";
-		}
-
-		$email->body = $body;
-
-		craft()->email->sendEmail($email);*/
 	}
 }

@@ -46,7 +46,14 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			{
 				if ($transaction !== null)
 				{
-					$transaction->rollback();
+					try
+					{
+						$transaction->rollback();
+					}
+					catch(\CException $ex)
+					{
+						//
+					}
 				}
 			}
 		}

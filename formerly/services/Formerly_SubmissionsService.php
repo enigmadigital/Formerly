@@ -10,6 +10,18 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 	public function postSubmission(Formerly_SubmissionModel $submission)
 	{
+		if ($this->saveSubmission($submission))
+		{
+			$this->sendSubmissionEmail($submission);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public function saveSubmission(Formerly_SubmissionModel $submission)
+	{
 		$submissionRecord = new Formerly_SubmissionRecord();
 
 		$submissionRecord->formId = $submission->formId;
@@ -33,8 +45,6 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 						$transaction->commit();
 					}
 
-					$this->sendSubmissionEmail($submission);
-
 					return true;
 				}
 				else
@@ -46,21 +56,12 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			{
 				if ($transaction !== null)
 				{
-					try
-					{
-						$transaction->rollback();
-					}
-					catch(\CException $ex)
-					{
-						//
-					}
+					$transaction->rollback();
 				}
 			}
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 
 	public function sendSubmissionEmail(Formerly_SubmissionModel $submission)

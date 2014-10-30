@@ -78,18 +78,13 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		}
 
 		$email = new EmailModel();
-		$email->toEmail   = $form->toAddress;
-		$email->subject   = !empty($form->subject) ? $form->subject : 'Website Enquiry';
-		$email->fromEmail = $form->fromAddress;
+		$email->toEmail = $form->toAddress;
+		$email->subject = !empty($form->subject) ? $form->subject : 'Website Enquiry';
 
-		if (empty($form->fromAddress))
+
+		if (!empty($form->fromAddress))
 		{
-			$criteria = craft()->elements->getCriteria(ElementType::User);
-			$criteria->admin = true;
-
-			$admin = $criteria->first();
-
-			$email->fromEmail = $admin->email;
+			$email->fromEmail = $form->fromAddress;
 		}
 
 		$body = '';

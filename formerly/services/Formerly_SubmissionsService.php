@@ -94,13 +94,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 				}
 				else
 				{
-					$body = '';
-					foreach ($form->getQuestions() as $question)
-					{
-						$body .= $question->name . "\n: " . $submission[$question->handle] . "\n\n";
-					}
-
-					$email->body = $body;
+					$email->body = $submission->getSummary();
 				}
 
 				if (!empty($email->body))

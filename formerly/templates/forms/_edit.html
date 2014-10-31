@@ -80,7 +80,6 @@
 {% import _self as self %}
 {% import '_includes/forms' as forms %}
 
-
 {% block content %}
 	<form method="post" accept-charset="UTF-8" data-saveshortcut="1">
 		<input type="hidden" name="action" value="formerly/forms/saveForm">
@@ -116,12 +115,12 @@
 
 		<hr>
 
-		<h2>Email</h2>
+		<h2>Emails</h2>
 
 		{{ forms.editableTableField({
 			label: 'Options',
 			id: 'emails',
-			name: "emails",
+			name: 'emails',
 			cols: {
 				to: {
 					heading: 'To',

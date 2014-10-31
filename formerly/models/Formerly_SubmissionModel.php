@@ -49,4 +49,23 @@ class Formerly_SubmissionModel extends BaseElementModel
 	{
 		return "#$this->id";
 	}
+
+	public function getSummary()
+	{
+		$summary = '';
+
+		$questions = $this->getForm()->getQuestions();
+		for ($i = 0; $i < count($questions); ++$i)
+		{
+			$question = $questions[$i];
+
+			$summary .= $question->name . "\n: " . $this[$question->handle];
+			if ($i != count($questions) - 1)
+			{
+				$summary .= "\n\n";
+			}
+		}
+
+		return $summary;
+	}
 }

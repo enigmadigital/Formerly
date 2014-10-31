@@ -33,8 +33,47 @@ class Formerly_FormsController extends BaseController
 		{
 			if (empty($variables['form']))
 			{
-				$variables['form']      = new Formerly_FormModel();
-				$variables['questions'] = array();
+				$user = craft()->userSession->getUser();
+
+				$form = new Formerly_FormModel();
+				$form->emails = array(
+					array(
+						'to'      => '{email}',
+						'from'    => $user->email,
+						'subject' => 'Thank you for your enquiry',
+						'body'    => "Hi {name},\n\nThanks for your enquiry! We'll get back to you shortly.\n\n$user->name",
+					),
+					array(
+						'to'      => $user->email,
+						'from'    => '{email}',
+						'subject' => 'Website enquiry',
+						'body'    => '',
+					)
+				);
+
+				$questions = array(
+					'new_1' => new Formerly_QuestionModel(array(
+						'name'     => 'Name',
+						'handle'   => 'name',
+						'type'     => Formerly_QuestionType::PlainText,
+						'required' => true
+					)),
+					'new_2' => new Formerly_QuestionModel(array(
+						'name'     => 'Email',
+						'handle'   => 'email',
+						'type'     => Formerly_QuestionType::Email,
+						'required' => true
+					)),
+					'new_3' => new Formerly_QuestionModel(array(
+						'name'     => 'Message',
+						'handle'   => 'message',
+						'type'     => Formerly_QuestionType::MultilineText,
+						'required' => true
+					)),
+				);
+
+				$variables['form']      = $form;
+				$variables['questions'] = $questions;
 			}
 
 			$variables['title'] = Craft::t('New form');

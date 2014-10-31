@@ -79,10 +79,14 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 				if (empty($emailDef['to'])) continue;
 
 				$email = new EmailModel();
-				$email->toEmail = $emailDef['to'];
-				$email->subject = !empty($emailDef['subject']) ? $emailDef['subject'] : 'Website Enquiry';
+				$email->toEmail = $this->_renderSubmissionTemplate($emailDef['to'], $submission);
+				$email->subject = !empty($emailDef['subject']) ? $this->_renderSubmissionTemplate($emailDef['subject'], $submission) : 'Website Enquiry';
 
-				if (!empty($emailDef['from'])) $email->fromEmail = $emailDef['from'];
+				if (!empty($emailDef['from']))
+				{
+					// Note: If no from email is set, the default is the craft admin email address.
+					$email->fromEmail = $this->_renderSubmissionTemplate($emailDef['from'], $submission);
+				}
 
 				if (!empty($emailDef['body']))
 				{
@@ -99,8 +103,6 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 					$email->body = $body;
 				}
 
-				FormerlyPlugin::log($email->body);
-
 				if (!empty($email->body))
 				{
 					craft()->email->sendEmail($email);
@@ -109,7 +111,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		}
 	}
 
-	private function _renderSubmissionTemplate($template, $submission)
+	private function _renderSubmissionTemplate($template, Formerly_SubmissionModel $submission)
 	{
 		$formHandle = $submission->getForm()->handle;
 

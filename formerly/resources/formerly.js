@@ -1,8 +1,8 @@
 $(function() {
 
-	var count = 0;
 	function nextId() {
-		return 'new_' + (++count);
+		var count = $('#questions .question').length;
+		return 'new_' + (count + 1);
 	}
 
 	function toggleOptions($question) {

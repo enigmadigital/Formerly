@@ -1,4 +1,4 @@
-# Formerly 1.0.1
+# Formerly 1.0.2
 
 ## Installing
 

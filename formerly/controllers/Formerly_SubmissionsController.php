@@ -3,6 +3,8 @@ namespace Craft;
 
 class Formerly_SubmissionsController extends BaseController
 {
+	protected $allowAnonymous = array('actionPostSubmission');
+
 	public function actionIndex()
 	{
 		$variables['forms'] = craft()->formerly_forms->getAllForms();

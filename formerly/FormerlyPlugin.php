@@ -36,7 +36,8 @@ class FormerlyPlugin extends BasePlugin
 			'formerly/forms/(?P<formId>\d+)'                          => array('action' => 'formerly/forms/editForm'),
 			'formerly'                                                => array('action' => 'formerly/submissions/index'),
 			'formerly/(?P<formHandle>{handle})/(?P<submissionId>\d+)' => array('action' => 'formerly/submissions/viewSubmission'),
-			'formerly/export'                                         => array('action' => 'formerly/export/index')
+			'formerly/export'                                         => array('action' => 'formerly/export/index'),
+			'formerly/export/csv'                                     => array('action' => 'formerly/export/csv')
 		);
 	}
 }

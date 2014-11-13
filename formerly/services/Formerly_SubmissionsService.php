@@ -10,9 +10,18 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 	public function postSubmission(Formerly_SubmissionModel $submission)
 	{
+		$this->onBeforePost(new Event($this, array(
+			'submission' => $submission
+		)));
+
 		if ($this->saveSubmission($submission))
 		{
 			$this->sendSubmissionEmails($submission);
+
+			$this->onPost(new Event($this, array(
+				'submission' => $submission
+			)));
+
 			return true;
 		}
 
@@ -90,11 +99,13 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 				if (!empty($emailDef['body']))
 				{
-					$email->body = $this->_renderSubmissionTemplate($emailDef['body'], $submission);
+					$email->body     = $this->_renderSubmissionTemplate($emailDef['body'], $submission);
+					$email->htmlBody = nl2br($email->body);
 				}
 				else
 				{
-					$email->body = $submission->getSummary();
+					$email->body     = $submission->getSummary();
+					$email->htmlBody = nl2br($email->body);
 				}
 
 				if (!empty($email->body))
@@ -113,5 +124,15 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		$formattedTemplate = preg_replace('/(?<![\}\%])\}(?![\}\%])/', '}', $formattedTemplate);
 
 		return craft()->templates->renderObjectTemplate($formattedTemplate, $submission);
+	}
+
+	public function onBeforePost(Event $event)
+	{
+		$this->raiseEvent('onBeforePost', $event);
+	}
+
+	public function onPost(Event $event)
+	{
+		$this->raiseEvent('onPost', $event);
 	}
 }

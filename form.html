@@ -27,14 +27,16 @@
 			<p class="required"><em>*</em> Denotes a required field</p>
 
 			{% for question in form.getQuestions() %}
-				<div class="f_row">
-					<label for="{{ question.handle }}">
-						{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
-					</label>
 
-					{% switch question.type %}
+				{% switch question.type %}
 
-						{% case 'PlainText' %}
+
+					{% case 'PlainText' %}
+						<div class="hidden_label">
+							<label for="{{ question.handle }}">
+								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</label>
+
 							<input type="text"
 								{% if question.required %}
 									required
@@ -43,11 +45,19 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
+						</div>
 
-						{% case 'MultilineText' %}
+
+					{% case 'MultilineText' %}
+						<div class="hidden_label">
+							<label for="{{ question.handle }}">
+								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</label>
+
 							<textarea
 								{% if question.required %}
 									required
@@ -56,56 +66,85 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								cols="20" rows="2"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]">{{ submission is defined ? submission[question.handle] }}</textarea>
+						</div>
 
-						{% case 'Dropdown' %}
-							<select
-								{% if question.required %}
-									required
-									aria-required="true"
-									data-val-required="'{{ question.name }}' is required"
-									data-val="true"
-								{% endif %}
-								id="{{ question.handle }}"
-								name="questions[{{ question.handle }}]">
-								{% for option in question.options %}
-									<option {{ submission is defined and submission[question.handle] == option.name ? 'selected' }}>
-										{{ option.name }}
-									</option>
-								{% endfor %}
-							</select>
 
-						{% case 'RadioButtons' %}
+					{% case 'Dropdown' %}
+						<label for="{{ question.handle }}">
+							{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+						</label>
+
+						<select
+							{% if question.required %}
+								required
+								aria-required="true"
+								data-val-required="'{{ question.name }}' is required"
+								data-val="true"
+							{% endif %}
+							id="{{ question.handle }}"
+							name="questions[{{ question.handle }}]">
+							{% for option in question.options %}
+								{% set selected = submission is defined and submission[question.handle]
+									? submission[question.handle] == option.value
+									: option.default %}
+								<option {{ selected ? 'selected' }}>
+									{{ option.label }}
+								</option>
+							{% endfor %}
+						</select>
+
+
+					{% case 'RadioButtons' %}
+						<ul>
+							{% for option in question.options %}
+								<li>
+									{% set selected = submission is defined and submission[question.handle]
+										? submission[question.handle] == option.value
+										: option.default %}
+									<input type="radio"
+										id="{{ question.handle ~ loop.index }}"
+										name="questions[{{ question.handle }}]"
+										value="{{ option.value }}"
+										{{ selected ? 'checked' }}>
+									<label for="{{ question.handle ~ loop.index }}">{{ option.label }}</label>
+								</li>
+							{% endfor %}
+						</ul>
+
+
+					{% case 'Checkboxes' %}
+						<fieldset class="rc">
 							<ul>
 								{% for option in question.options %}
 									<li>
-										<input type="radio"
-											id="{{ question.handle ~ loop.index }}"
-											name="questions[{{ question.handle }}]"
-											value="{{ option.name }}"
-											{{ submission is defined and submission[question.handle] == option.name ? 'checked' }}>
-										<label for="{{ question.handle ~ loop.index }}">{{ option.name }}</label>
-									</li>
-								{% endfor %}
-							</ul>
-
-						{% case 'Checkboxes' %}
-							<ul>
-								{% for option in question.options %}
-									<li>
+										{% set selected = submission is defined and submission[question.handle]
+											? option.value in submission[question.handle]
+											: option.default %}
+										{% if not selected %}
+											<input type="checkbox" name="questions[{{ question.handle }}][]" value="">
+										{% endif %}
 										<input type="checkbox"
 											id="{{ question.handle ~ loop.index }}"
-											name="questions[{{ question.handle }}]"
-											value="{{ option.name }}"
-											{{ submission is defined and submission[question.handle] == option.name ? 'checked' }}>
-										<label for="{{ question.handle ~ loop.index }}">{{ option.name }}</label>
+											name="questions[{{ question.handle }}][]"
+											value="{{ option.value }}"
+											{{ selected ? 'checked' }}>
+										<label for="{{ question.handle ~ loop.index }}">{{ option.label }}</label>
 									</li>
 								{% endfor %}
 							</ul>
+						</fieldset>
 
-						{% case 'Number' %}
+
+					{% case 'Number' %}
+						<div class="hidden_label">
+							<label for="{{ question.handle }}">
+								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</label>
+
 							<input type="number"
 								{% if question.required %}
 									required
@@ -114,11 +153,19 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
+						</div>
 
-						{% case 'Email' %}
+
+					{% case 'Email' %}
+						<div class="hidden_label">
+							<label for="{{ question.handle }}">
+								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</label>
+
 							<input type="email"
 								{% if question.required %}
 									required
@@ -127,11 +174,19 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
+						</div>
 
-						{% case 'Tel' %}
+
+					{% case 'Tel' %}
+						<div class="hidden_label">
+							<label for="{{ question.handle }}">
+								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</label>
+
 							<input type="tel"
 								{% if question.required %}
 									required
@@ -140,11 +195,19 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
+						</div>
 
-						{% case 'Url' %}
+
+					{% case 'Url' %}
+						<div class="hidden_label">
+							<label for="{{ question.handle }}">
+								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</label>
+
 							<input type="url"
 								{% if question.required %}
 									required
@@ -153,11 +216,19 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
+						</div>
 
-						{% case 'Date' %}
+
+					{% case 'Date' %}
+						<div class="hidden_label">
+							<label for="{{ question.handle }}">
+								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</label>
+
 							<input type="text"
 								{% if question.required %}
 									required
@@ -167,15 +238,15 @@
 								{% endif %}
 								class="text"
 								pattern="\d{2}\/\d{2}\/\d{4}"
-								placeholder="DD/MM/YYYY"
+								placeholder="{{ question.name | upper }} (DD/MM/YYYY)"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}][date]"
 								value="{{ submission is defined ? submission[question.handle] }}">
+						</div>
 
 
 					{% endswitch %}
 
-				</div>
 			{% endfor %}
 
 			<div class="btns">

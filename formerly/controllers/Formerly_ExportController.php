@@ -5,7 +5,9 @@ class Formerly_ExportController extends BaseController
 
 	public function actionIndex()
 	{
-		$this->renderTemplate('formerly/export/_index', array());
+		$this->renderTemplate('formerly/export/_index', array(
+			'forms' => craft()->formerly_forms->getAllForms()
+		));
 	}
 
 }

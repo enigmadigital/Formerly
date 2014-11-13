@@ -10,5 +10,27 @@
 {% set selectedTab = 'export' %}
 
 {% set content %}
-	Some export action text.
+	{% if forms | length %}
+		<div class="field">
+			<div class="heading">
+				<label for="form">Form</label>
+				<div class="instructions">
+					<p>Select the form whose data you want to export</p>
+				</div>
+			</div>
+			<div class="select">
+				<select name="form">
+					{% for form in forms %}
+						<option value="{{ form.id }}">{{ form.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+
+		<div class="button last">
+			<input type="submit" class="btn submit" value="Export CSV" />
+		</div>
+	{% else %}
+		<p>There are no forms.</p>
+	{% endif %}
 {% endset %}

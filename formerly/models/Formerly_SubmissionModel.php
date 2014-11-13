@@ -55,11 +55,37 @@ class Formerly_SubmissionModel extends BaseElementModel
 		$summary = '';
 
 		$questions = $this->getForm()->getQuestions();
+
 		for ($i = 0; $i < count($questions); ++$i)
 		{
 			$question = $questions[$i];
 
-			$summary .= $question->name . "\n: " . $this[$question->handle];
+			$name  = $question->name;
+			$value = $this[$question->handle];
+
+			$summary .= $name . ":\n";
+
+			if ($value instanceof MultiOptionsFieldData)
+			{
+				$options = $value->getOptions();
+
+				for ($j = 0; $j < count($options); ++$j)
+				{
+					$option = $options[$j];
+
+					$summary .= $option->label . ': ' . ($option->selected ? 'yes' : 'no');
+				 
+					if ($j != count($options) - 1)
+					{
+						$summary .= "\n";
+					}
+				}
+			}
+			else
+			{
+				$summary .= $value;
+			}
+
 			if ($i != count($questions) - 1)
 			{
 				$summary .= "\n\n";

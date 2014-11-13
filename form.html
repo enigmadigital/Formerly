@@ -45,6 +45,7 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
@@ -65,6 +66,7 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								cols="20" rows="2"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]">{{ submission is defined ? submission[question.handle] }}</textarea>
@@ -120,11 +122,14 @@
 								{% for option in question.options %}
 									<li>
 										{% set selected = submission is defined and submission[question.handle]
-											? submission[question.handle] == option.value
+											? option.value in submission[question.handle]
 											: option.default %}
+										{% if not selected %}
+											<input type="checkbox" name="questions[{{ question.handle }}][]" value="">
+										{% endif %}
 										<input type="checkbox"
 											id="{{ question.handle ~ loop.index }}"
-											name="questions[{{ question.handle }}]"
+											name="questions[{{ question.handle }}][]"
 											value="{{ option.value }}"
 											{{ selected ? 'checked' }}>
 										<label for="{{ question.handle ~ loop.index }}">{{ option.label }}</label>
@@ -148,6 +153,7 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
@@ -168,6 +174,7 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
@@ -188,6 +195,7 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
@@ -208,6 +216,7 @@
 									data-val="true"
 								{% endif %}
 								class="text"
+								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}]"
 								value="{{ submission is defined ? submission[question.handle] }}">
@@ -229,7 +238,7 @@
 								{% endif %}
 								class="text"
 								pattern="\d{2}\/\d{2}\/\d{4}"
-								placeholder="DD/MM/YYYY"
+								placeholder="{{ question.name | upper }} (DD/MM/YYYY)"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}][date]"
 								value="{{ submission is defined ? submission[question.handle] }}">

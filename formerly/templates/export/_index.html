@@ -1,0 +1,14 @@
+{% extends '_layouts/cp' %}
+{% set title = 'Export'|t %}
+
+{% set tabs = {
+	submissions: { label: "Submissions"|t, url: url('formerly') },
+	forms:       { label: "Forms"|t, url: url('formerly/forms') },
+	export:      { label: 'Export'|t, url: url('formerly/export') }
+} %}
+
+{% set selectedTab = 'export' %}
+
+{% set content %}
+	Some export action text.
+{% endset %}

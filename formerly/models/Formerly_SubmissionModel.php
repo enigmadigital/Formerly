@@ -92,6 +92,6 @@ class Formerly_SubmissionModel extends BaseElementModel
 			}
 		}
 
-		return implode("\n\n", $summary);
+		return $summary;
 	}
 }

@@ -1,0 +1,6 @@
+@charset "utf-8";
+
+body .matrixblock .titlebar.nocheckbox
+{
+	padding-left: 14px;
+}

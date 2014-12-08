@@ -1,9 +1,16 @@
 {% extends "_layouts/cp" %}
 
+{% includeCssResource('formerly/formerly.css') %}
+
 {% macro questionMarkup(id, question) %}
 	{% import '_includes/forms' as forms %}
 
 	<div class="question matrixblock" data-id="{{ id }}">
+		<div class="titlebar nocheckbox">
+			<div class="blocktype"></div>
+			<div class="preview"></div>
+		</div>
+
 		<div class="actions">
 			<a class="move icon" role="button" title="Reorder"></a>
 			<a class="delete icon" role="button" title="Actions"></a>

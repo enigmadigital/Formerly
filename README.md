@@ -1,4 +1,4 @@
-# Formerly 1.1.1
+# Formerly 1.1.2
 
 ## Installing
 
@@ -54,8 +54,14 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 {% endfor %}
 ```
 
+## Updates
+
+* 1.1.2
+	* Updated edit form UI to follow new Craft 2.3 Matrix appearance.
+
 ## Todo
 
 * File uploads
 * Better validation
 * More question attributes, e.g. placeholder, error messages
+* Date range selection for data export

@@ -58,6 +58,16 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 
 * 1.1.2
 	* Updated edit form UI to follow new Craft 2.3 Matrix appearance.
+* 1.1.1
+	* Fix exception thrown when submitting forms.
+* 1.1.0
+	* Add ability to export form submissions as CSV.
+* 1.0.2
+	* Fix error when submitting form while not logged into Craft.
+* 1.0.1
+	* Fix error preventing questions from saving properly.
+* 1.0.0
+	* Initial release!
 
 ## Todo
 

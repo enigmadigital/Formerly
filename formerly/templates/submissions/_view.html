@@ -8,7 +8,20 @@
 			{% for question in submission.getForm().getQuestions() %}
 				<tr>
 					<th>{{ question.name }}</th>
-					<td>{{ submission[question.handle] }}</td>
+
+					<td>
+						{% if question.type in ['Dropdown', 'RadioButtons', 'Checkboxes'] %}
+							{% set data = submission[question.handle] %}
+							{% for option in data.getOptions() %}
+								{{ option.label }}: {{ option.selected ? 'yes' : 'no' }}
+								{% if not loop.last %}
+									<br>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							{{ submission[question.handle] }}
+						{% endif %}
+					</td>
 				</tr>
 			{% endfor %}
 		</tbody>

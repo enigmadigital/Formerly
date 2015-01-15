@@ -10,7 +10,7 @@ class FormerlyPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-	    return '1.1.2';
+	    return '1.2.0';
 	}
 
 	public function getDeveloper()

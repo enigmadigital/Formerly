@@ -1,4 +1,4 @@
-# Formerly 1.1.2
+# Formerly 1.2.0
 
 ## Installing
 
@@ -56,6 +56,9 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 
 ## Updates
 
+* 1.2.0
+	* Add ability to delete submissions.
+	* Fix error when viewing submissions.
 * 1.1.2
 	* Updated edit form UI to follow new Craft 2.3 Matrix appearance.
 * 1.1.1

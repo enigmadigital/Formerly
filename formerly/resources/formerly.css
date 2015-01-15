@@ -4,3 +4,8 @@ body .matrixblock .titlebar.nocheckbox
 {
 	padding-left: 14px;
 }
+
+.elements th:last-child, .elements td:last-child {
+	width: 0.01% !important;
+	vertical-align: middle;
+}

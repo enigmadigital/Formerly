@@ -72,6 +72,20 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		return false;
 	}
 
+	public function deleteSubmissionById($submissionId)
+	{
+		if (!$submissionId)
+		{
+			return false;
+		}
+
+		$affectedRows = craft()->db->createCommand()->delete('formerly_submissions', array(
+			'id' => $submissionId
+		));
+
+		return (bool) $affectedRows;
+	}
+
 	public function sendSubmissionEmails(Formerly_SubmissionModel $submission)
 	{
 		if (!$submission)

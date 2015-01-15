@@ -58,8 +58,21 @@ class Formerly_SubmissionElementType extends BaseElementType
 		}
 
 		$attributes['dateCreated'] = Craft::t('Date Created');
+		$attributes['action'] = '';
 
 		return $attributes;
+	}
+
+	public function getTableAttributeHtml(BaseElementModel $element, $attribute)
+	{
+		if ($attribute == 'action')
+		{
+			return '<a class="delete icon" role="button" title="Delete"></a>';
+		}
+		else
+		{
+			return parent::getTableAttributeHtml($element, $attribute);
+		}
 	}
 
 	public function defineCriteriaAttributes()

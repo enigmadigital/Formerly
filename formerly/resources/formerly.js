@@ -58,4 +58,19 @@ $(function() {
 		toggleOptions($question);
 	});
 
+	$('.elements').on('click', '.delete', function(e) {
+		var $row = $(e.currentTarget).parents('tr');
+		var id = $row.attr('data-id');
+		if (confirm('Are you sure you want to delete this submission?')) {
+			Craft.postActionRequest('formerly/submissions/deleteSubmission', { submissionId: id }, function(response) {
+				if (response && response.ok) {
+					$row.remove();
+					Craft.cp.displayNotice('Submission deleted.');
+				} else {
+					Craft.cp.displayError('Error deleting submission.');
+				}
+			});
+		}
+	});
+
 });

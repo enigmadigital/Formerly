@@ -14,7 +14,6 @@ class Formerly_SubmissionsController extends BaseController
 
 	public function actionViewSubmission(array $variables = array())
 	{
-
 		if (!empty($variables['submissionId']))
 		{
 			if (empty($variables['submission']))
@@ -61,5 +60,15 @@ class Formerly_SubmissionsController extends BaseController
 				'submission' => $submission
 			));
 		}
+	}
+
+	public function actionDeleteSubmission()
+	{
+		$this->requireAjaxRequest();
+
+		$submissionId = craft()->request->getRequiredPost('submissionId');
+		$ok = craft()->formerly_submissions->deleteSubmissionById($submissionId);
+
+		$this->returnJson(array('ok' => $ok));
 	}
 }

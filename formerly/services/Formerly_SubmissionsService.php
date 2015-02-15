@@ -107,8 +107,22 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 				if (!empty($emailDef['from']))
 				{
-					// Note: If no from email is set, the default is the craft admin email address.
-					$email->fromEmail = $this->_renderSubmissionTemplate($emailDef['from'], $submission);
+					$from = $this->_renderSubmissionTemplate($emailDef['from'], $submission);
+
+					// https://regex101.com/r/yI0hL1/1
+					preg_match('/^(.+)\<(.+)\>$/', $from, $matches);
+
+					if(count($matches) >= 3)
+					{
+						// The provided from email is in the format Name <email>.
+						$email->fromName  = trim($matches[1]);
+						$email->fromEmail = trim($matches[2]);
+					}
+					else
+					{
+						// Note: If no from email is set, the default is the craft admin email address.
+						$email->fromEmail = $from;
+					}
 				}
 
 				if (!empty($emailDef['body']))

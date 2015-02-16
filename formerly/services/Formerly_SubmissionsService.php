@@ -112,7 +112,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 					// https://regex101.com/r/yI0hL1/1
 					preg_match('/^(.+)\<(.+)\>$/', $from, $matches);
 
-					if(count($matches) >= 3)
+					if (count($matches) >= 3)
 					{
 						// The provided from email is in the format Name <email>.
 						$email->fromName  = trim($matches[1]);

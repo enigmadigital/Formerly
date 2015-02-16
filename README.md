@@ -1,4 +1,4 @@
-# Formerly 1.2.0
+# Formerly 1.3.0
 
 ## Installing
 
@@ -56,6 +56,9 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 
 ## Updates
 
+* 1.3.0
+    * Add ability to use the format `John Smith <john.smith@website.com>` in the
+    from field.
 * 1.2.0
 	* Add ability to delete submissions.
 	* Fix error when viewing submissions.

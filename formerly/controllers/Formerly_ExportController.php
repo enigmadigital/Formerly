@@ -18,10 +18,20 @@ class Formerly_ExportController extends BaseController
 
 		$criteria = craft()->elements->getCriteria('Formerly_Submission');
 		$criteria->formId = $formId;
+        $criteria->limit = -1;
+        set_time_limit('600');
 
-		$data = array();
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . ($form->handle . '_submissions.csv'));
+        header('Content-Transfer-Encoding: binary');
 
-		foreach($criteria->find() as $submission)
+        $stream = fopen('php://output', 'w');
+
+        // Write column names first.
+
+        $first = true;
+
+        foreach($criteria->find() as $submission)
 		{
 			$row = array(
 				'Id' => $submission->id,
@@ -34,34 +44,36 @@ class Formerly_ExportController extends BaseController
 				$columnName = ucwords($columnName);
 
 				$row[$columnName] = $submission->{$question->handle};
+                $value = $submission->{$question->handle};
+                if($value instanceof MultiOptionsFieldData)
+                {
+                    $options = $value->getOptions();
+
+                    $summary = array();
+                    for ($j = 0; $j < count($options); ++$j)
+                    {
+                        $option = $options[$j];
+                        if($option->selected)
+                            $summary[] = $option->label;
+                    }
+					$row[$columnName] = implode($summary, ', ');
+				}
+				else
+				{
+   					$row[$columnName] = $value;
+   				}
 			}
 
-			$data[] = $row;
-		}
+            if ($first) {
+                fputcsv($stream, array_keys($row));
+                $first = false;
+            }
 
-		if(count($data) > 0)
-		{
-			header('Content-Type: application/octet-stream');
-			header('Content-Disposition: attachment; filename="' . ($form->handle . '_submissions.csv'));
-			header('Content-Transfer-Encoding: binary');
+            fputcsv($stream, $row);
 
-			$stream = fopen('php://output', 'w');
+        }
 
-			// Write column names first.
-			fputcsv($stream, array_keys($data[0]));
-
-			foreach ($data as $row)
-			{
-				fputcsv($stream, $row);
-			}
-
-			fclose($stream);
-		}
-		else
-		{
-			header('Content-type: text/plain');
-			echo 'There are no submissions.';
-		}
+        fclose($stream);
 	}
 
 }

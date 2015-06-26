@@ -124,9 +124,6 @@
 										{% set selected = submission is defined and submission[question.handle]
 											? option.value in submission[question.handle]
 											: option.default %}
-										{% if not selected %}
-											<input type="checkbox" name="questions[{{ question.handle }}][]" value="">
-										{% endif %}
 										<input type="checkbox"
 											id="{{ question.handle ~ loop.index }}"
 											name="questions[{{ question.handle }}][]"

@@ -351,6 +351,11 @@ class Formerly_FormsService extends BaseApplicationComponent
 			case Formerly_QuestionType::Date:
 				$field->type = 'Date';
 				break;
+
+			case Formerly_QuestionType::Custom:
+				$field->type = 'PlainText';
+				break;
+
 		}
 
 

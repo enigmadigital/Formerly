@@ -14,4 +14,5 @@ class Formerly_QuestionType extends BaseEnum
 	const Url           = 'Url';
 	const Number        = 'Number';
 	const Date          = 'Date';
+	const Custom 		= 'Custom';
 }

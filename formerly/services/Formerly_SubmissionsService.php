@@ -39,34 +39,45 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		if (!$submission->hasErrors())
 		{
-			$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
-			try
-			{
-				if (craft()->elements->saveElement($submission))
-				{
-					$submissionRecord->id = $submission->id;
+            $alreadySubmitted = false;
+            $email = '';
+            foreach ($_REQUEST['questions'] as $key => $value) {
+                if (strpos($key, 'email') > -1)
+                    $email = $value;
+            }
 
-					$submissionRecord->save(false);
+            $criteria = craft()->elements->getCriteria('Formerly_Submission');
+            $criteria-> search = $email;
 
-					if ($transaction !== null)
-					{
-						$transaction->commit();
-					}
+            foreach($criteria->find() as $submission)
+            {
+                $alreadySubmitted = true;
+            }
 
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch (\Exception $ex)
-			{
-				if ($transaction !== null)
-				{
-					$transaction->rollback();
-				}
-			}
+            if ($alreadySubmitted)
+                return true;
+            else {
+                $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+                try {
+                    if (craft()->elements->saveElement($submission)) {
+                        $submissionRecord->id = $submission->id;
+
+                        $submissionRecord->save(false);
+
+                        if ($transaction !== null) {
+                            $transaction->commit();
+                        }
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } catch (\Exception $ex) {
+                    if ($transaction !== null) {
+                        $transaction->rollback();
+                    }
+                }
+            }
 		}
 
 		return false;
@@ -128,12 +139,12 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 				if (!empty($emailDef['body']))
 				{
 					$email->body     = $this->_renderSubmissionTemplate($emailDef['body'], $submission);
-					$email->htmlBody = nl2br($email->body);
+					$email->htmlBody = $email->body;
 				}
 				else
 				{
 					$email->body     = $submission->getSummary();
-					$email->htmlBody = nl2br($email->body);
+					$email->htmlBody = $email->body;
 				}
 
 				if (!empty($email->body))

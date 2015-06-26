@@ -1,4 +1,4 @@
-# Formerly 1.3.0
+# Formerly 1.3.1
 
 ## Installing
 
@@ -56,6 +56,13 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 
 ## Updates
 
+* 1.3.1
+  * Remove limit to 100 export items
+  * Fix bug to display multiple options in submission results (alexbrindalsl)
+  * Fix multiple form dropdown not remembering which form selected and and - select form option (Silvaire)
+  * Fix export multiple options (joshangell)
+  * Add "custom" field type (alexbrindalsl's coded field type)
+  * fix checkbox bug in sample
 * 1.3.0
     * Add ability to use the format `John Smith <john.smith@website.com>` in the
     from field.

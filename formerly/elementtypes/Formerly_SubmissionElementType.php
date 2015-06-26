@@ -71,7 +71,25 @@ class Formerly_SubmissionElementType extends BaseElementType
 		}
 		else
 		{
-			return parent::getTableAttributeHtml($element, $attribute);
+			$value = $element->$attribute;
+			if($value instanceof MultiOptionsFieldData)
+			{
+				$options = $value->getOptions();
+				$summary = array();
+
+				for ($j = 0; $j < count($options); ++$j)
+					{
+						$option = $options[$j];
+						if($option->selected) {
+							$summary[] = $option->label;
+						}
+					}
+				return implode($summary, ', ');
+			}
+			else
+			{
+							return parent::getTableAttributeHtml($element, $attribute);
+			}
 		}
 	}
 

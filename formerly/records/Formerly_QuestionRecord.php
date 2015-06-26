@@ -18,6 +18,7 @@ class Formerly_QuestionRecord extends BaseRecord
 			'type'          => array(AttributeType::Enum, 'required' => true, 'values' => array(
 				Formerly_QuestionType::PlainText,
 				Formerly_QuestionType::MultilineText,
+				Formerly_QuestionType::Custom,
 				Formerly_QuestionType::Dropdown,
 				Formerly_QuestionType::RadioButtons,
 				Formerly_QuestionType::Checkboxes,

@@ -17,6 +17,7 @@ class Formerly_QuestionModel extends BaseModel
 			'type'          => array(AttributeType::Enum, 'values' => array(
 				Formerly_QuestionType::PlainText,
 				Formerly_QuestionType::MultilineText,
+				Formerly_QuestionType::Custom,
 				Formerly_QuestionType::Dropdown,
 				Formerly_QuestionType::RadioButtons,
 				Formerly_QuestionType::Checkboxes,

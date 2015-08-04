@@ -2,7 +2,7 @@
 
 {% includeCssResource('formerly/formerly.css') %}
 
-{% macro questionMarkup(id, question) %}
+{% macro questionMarkup(formhandle, id, question) %}
 	{% import '_includes/forms' as forms %}
 
 	<div class="question matrixblock" data-id="{{ id }}">
@@ -26,11 +26,20 @@
 
 		<div class="fields">
 			{{ forms.textField({
-				label: 'Name'|t,
+				label: question ? 'Name<br /><div class="instructions">Use the tag {' ~ question.handle | replace({ (formhandle ~ '_'): '' }) ~ '} to insert this field into an email</div>' : 'Name'|t,
 				id: "questions-#{id}-name",
 				name: "questions[#{id}][name]",
 				value: question ? question.name,
 				errors: question ? question.getErrors('name')
+			}) }}
+
+			{{ forms.textField({
+				label: 'Instructions'|t,
+				id: "questions-#{id}-instructions",
+				name: "questions[#{id}][instructions]",
+				instructions: "If the label for your question is larger than 50 characters keep the name short and enter the full label here",
+				value: question ? question.instructions,
+				errors: question ? question.getErrors('instructions')
 			}) }}
 
 			{{ forms.checkbox({
@@ -50,7 +59,6 @@
 				options: {
 					PlainText: 'Text',
 					MultilineText: 'Multiline Text',
-					Custom: 'Custom',
 					Dropdown: 'Dropdown',
 					RadioButtons: 'Radio Buttons',
 					Checkboxes: 'Checkboxes',
@@ -58,7 +66,11 @@
 					Tel: 'Tel',
 					Url: 'Url',
 					Number: 'Number',
-					Date: 'Date'
+					Date: 'Date',
+					Assets: 'Assets',
+					Custom: 'Custom',
+					CustomList: 'CustomList',
+					RawHTML: 'RawHTML',
 				}
 			}) }}
 
@@ -71,7 +83,12 @@
 						label: {
 							heading: 'Label',
 							type: 'singleline',
-							width: '100%'
+							width: '50%'
+						},
+						value: {
+							heading: 'Value',
+							type: 'singleline',
+							width: '50%'
 						},
 						default: {
 							heading: 'Default',
@@ -156,7 +173,7 @@
 
 		<div id="questions" class="blocks">
 			{% for questionId, question in questions %}
-				{{ self.questionMarkup(questionId, question) }}
+				{{ self.questionMarkup(form.handle, questionId, question) }}
 			{% endfor %}
 		</div>
 
@@ -172,7 +189,7 @@
 	</form>
 
 	<script type="text/template" id="question_template">
-		{{ self.questionMarkup('__QUESTION_ID__') }}
+		{{ self.questionMarkup(form.handle, '__QUESTION_ID__') }}
 	</script>
 
 {% endblock %}

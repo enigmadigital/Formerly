@@ -7,7 +7,7 @@ $(function() {
 
 	function toggleOptions($question) {
 		var val = $question.find('select[name*=type]').val();
-		var isSimple = ['PlainText', 'MultilineText', 'FileUpload', 'Email', 'Tel', 'Url', 'Number', 'Date', 'Custom'].indexOf(val) != -1;
+		var isSimple = ['PlainText', 'MultilineText', 'Email', 'Tel', 'Url', 'Number', 'Date', 'Custom', 'RawHTML', 'Assets'].indexOf(val) != -1;
 		$question.find('.options').toggleClass('hidden', isSimple);
 	}
 
@@ -38,7 +38,12 @@ $(function() {
 			label: {
 				heading: 'Label',
 				type: 'singleline',
-				width: '100%'
+				width: '50%'
+			},
+			value: {
+				heading: 'Value',
+				type: 'singleline',
+				width: '50%'
 			},
 			default: {
 				heading: 'Default',

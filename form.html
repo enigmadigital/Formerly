@@ -1,4 +1,67 @@
 <form method="post" accept-charset="utf-8">
+
+{#
+
+Check if already submitted
+==========================
+
+To check if a form has already been submitted using a specific email address, use something like this:
+
+	$.post('/',
+		{
+			action: 'formerly/submissions/alreadySubmitted',
+			formid: 4,
+			email: "andrew@izilla.com.au"
+		},
+		function(data, status){
+			alert("already?:" + data.alreadysubmitted + "\nStatus: " + data.ok);
+	});
+
+
+Ajax posting
+============
+
+To submit the form using ajax use something like this:
+
+	postForm: function(){
+		  var $form = $('#form_1');
+		  var formData = $form.serialize();
+		  $form
+		  .on('submit', function(e) {
+
+		    e.preventDefault();
+
+		    $.ajax({
+		      url : '',
+		      method: 'POST',
+		      data: formData,
+		      success: function(response, textStatus, jqXHR){
+		        //do something for success response
+		      },
+		      error: function(jqXHR, textStatus, errorThrown){
+		        //do something for error
+		      }
+		    });
+
+		    return false;
+		  });
+
+		}// postForm
+}
+
+Config settings
+===============
+
+Set these config settings in /craft/config/general.php as needed
+
+		'formerly' => array(
+			'honeyPotName' => 'pants', //id of input honeypot, don't call it something obvious like honeypot
+			'assetFolderId' => 6,  //id of the folder you want to put assets in, note - you should secure this folder from browsing
+			'allowedKinds' =>  array("excel","image","pdf","text","word"), //valid types of files users can upload
+		),
+
+#}
+
 	{{ getCsrfInput() }}
 	<input type="hidden" name="action" value="formerly/submissions/postSubmission">
 	<input type="hidden" name="redirect" value="{{ craft.request.url }}?ok=1">
@@ -34,7 +97,7 @@
 					{% case 'PlainText' %}
 						<div class="hidden_label">
 							<label for="{{ question.handle }}">
-								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
 							</label>
 
 							<input type="text"
@@ -55,7 +118,7 @@
 					{% case 'MultilineText' %}
 						<div class="hidden_label">
 							<label for="{{ question.handle }}">
-								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
 							</label>
 
 							<textarea
@@ -75,7 +138,7 @@
 
 					{% case 'Dropdown' %}
 						<label for="{{ question.handle }}">
-							{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
 						</label>
 
 						<select
@@ -99,34 +162,19 @@
 
 
 					{% case 'RadioButtons' %}
-						<ul>
-							{% for option in question.options %}
-								<li>
-									{% set selected = submission is defined and submission[question.handle]
-										? submission[question.handle] == option.value
-										: option.default %}
-									<input type="radio"
-										id="{{ question.handle ~ loop.index }}"
-										name="questions[{{ question.handle }}]"
-										value="{{ option.value }}"
-										{{ selected ? 'checked' }}>
-									<label for="{{ question.handle ~ loop.index }}">{{ option.label }}</label>
-								</li>
-							{% endfor %}
-						</ul>
-
-
-					{% case 'Checkboxes' %}
-						<fieldset class="rc">
+						<fieldset class="radio_checkbox_group radio_checkbox_group--no_legend">
+							<p class="radio_checkbox_group_legend">
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</p>
 							<ul>
 								{% for option in question.options %}
 									<li>
 										{% set selected = submission is defined and submission[question.handle]
-											? option.value in submission[question.handle]
+											? submission[question.handle] == option.value
 											: option.default %}
-										<input type="checkbox"
+										<input type="radio"
 											id="{{ question.handle ~ loop.index }}"
-											name="questions[{{ question.handle }}][]"
+											name="questions[{{ question.handle }}]"
 											value="{{ option.value }}"
 											{{ selected ? 'checked' }}>
 										<label for="{{ question.handle ~ loop.index }}">{{ option.label }}</label>
@@ -136,10 +184,63 @@
 						</fieldset>
 
 
+					{% case 'Checkboxes' %}
+						<fieldset class="radio_checkbox_group radio_checkbox_group--no_legend">
+							<p class="radio_checkbox_group_legend">
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</p>
+									<ul>
+										{% for option in question.options %}
+											<li>
+												{% set selected = submission is defined and submission[question.handle]
+													? option.value in submission[question.handle]
+													: option.default %}
+												<input type="checkbox"
+													id="{{ question.handle ~ loop.index }}"
+													name="questions[{{ question.handle }}][]"
+													value="{{ option.value }}"
+													{{ selected ? 'checked' }}>
+												<label for="{{ question.handle ~ loop.index }}">{{ option.label }}</label>
+											</li>
+										{% endfor %}
+									</ul>
+						</fieldset>
+					{% case 'CustomList' %}
+						<fieldset>
+							<fieldset class="radio_checkbox_group radio_checkbox_group--no_legend">
+								<p class="">
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+							</p>
+							<ul>
+								{% for option in question.options %}
+									<li>
+										<label for="{{ question.handle ~ loop.index }}">{{ option.label }}</label>
+										{% set selected = submission is defined and submission[question.handle]
+										? option.value in submission[question.handle]
+										: option.default %}
+										<input type="textbox" maxlength="1"
+											   id="{{ question.handle ~ loop.index }}"
+											   name="questions[{{ question.handle }}][]"
+											   {% if question.required %}
+												   required
+												   aria-required="true"
+												   data-val-required="'{{ question.name }}' is required"
+												   data-val="true"
+											   {% endif %}
+											   {% if submission is defined %}
+												value="{{ submission[question.handle][loop.index-1] }}"
+											   {% endif %}
+											   >
+									</li>
+								{% endfor %}
+							</ul>
+						</fieldset>
+					{% case 'RawHTML' %}
+						{{ question.instructions | raw }}
 					{% case 'Number' %}
 						<div class="hidden_label">
 							<label for="{{ question.handle }}">
-								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
 							</label>
 
 							<input type="number"
@@ -181,7 +282,7 @@
 					{% case 'Tel' %}
 						<div class="hidden_label">
 							<label for="{{ question.handle }}">
-								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
 							</label>
 
 							<input type="tel"
@@ -202,7 +303,7 @@
 					{% case 'Url' %}
 						<div class="hidden_label">
 							<label for="{{ question.handle }}">
-								{{ question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+								{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
 							</label>
 
 							<input type="url"
@@ -240,12 +341,29 @@
 								name="questions[{{ question.handle }}][date]"
 								value="{{ submission is defined ? submission[question.handle] }}">
 						</div>
-
-
+					{% case 'Assets' %}
+					<div class="form_row">
+						<label for="{{ question.handle }}">
+							{{ question.instructions ? question.instructions : question.name }}{% if question.required %}&nbsp;<em>*</em>{% endif %}
+						</label>
+						<input type="file"
+							   {% if question.required %}
+							   required
+							   aria-required="true"
+							   data-val-required="'{{ question.name }}' is required"
+							   data-val="true"
+							   {% endif %}
+							   class="input-text"
+							   id="{{ question.handle }}"
+							   name="questions[{{ question.handle }}]">
+					</div>
 					{% endswitch %}
 
 			{% endfor %}
 
+			{% if craft.config.formerly is defined and craft.config.formerly.honeyPotName is defined %}
+				<input type="text" id="formerly-hp-sec" name="{{ craft.config.formerly.honeyPotName }}" />
+			{% endif %}
 			<div class="btns">
 				<input type="submit" class="submit action" id="btnSubmit" value="Submit" name="btnSubmit">
 			</div>

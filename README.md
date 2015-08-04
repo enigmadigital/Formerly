@@ -1,4 +1,4 @@
-# Formerly 1.3.1
+# Formerly 1.3.2
 
 ## Installing
 
@@ -55,6 +55,19 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 ```
 
 ## Updates
+* 1.3.2
+  * support for ajax posting of forms
+  * file upload type (add 'assetFolderId' => <id of asset folder to store files> to your config)
+  * remove check for if current form email has already submitted form, this should be the exception rather than rule. You may want users to be able to post multiple times (for example a bug reporting form). If you want this functionality add it yourself using an ajax action:
+  * add handle instruction to questions so it is clearer what tag to use in emails
+  * Expose instructions so you can enter extra long labels
+  * Add value to list items so you can now enter label and value
+  * new "customlist" type, similar to "custom" but for lists
+  * Don't show checkboxes in the submission list view (they take way too much space)
+  * Create RawHTML type for output blocks of html on a form
+  * Don't crash if form tags are wrong in the email template, just leave the tags un-replaced
+  * bug fix - don't crash if styles are in the email template
+  * Simple honeypot checking (add 'honeyPotName' => 'my_cool_name' to general settings, submission code will check for the existance of a post value with that name)
 
 * 1.3.1
   * Remove limit to 100 export items

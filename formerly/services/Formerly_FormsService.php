@@ -162,6 +162,18 @@ class Formerly_FormsService extends BaseApplicationComponent
 		{
 			$field = $fields[$question->fieldId];
 			$question->setAttributes($this->questionAttributesForField($field));
+
+			if ($field->type == Formerly_QuestionType::Assets)
+				$question->type = Formerly_QuestionType::Assets;
+			if (strpos($field->handle, Formerly_QuestionType::CustomListHandle) > 0) {
+				$question->type = Formerly_QuestionType::CustomList;
+			}
+			if (strpos($field->handle, Formerly_QuestionType::CustomHandle) > 0) {
+				$question->type = Formerly_QuestionType::Custom;
+			}
+			if (strpos($field->handle, Formerly_QuestionType::RawHTMLHandle) > 0) {
+				$question->type = Formerly_QuestionType::RawHTML;
+			}
 		}
 
 		return $questions;
@@ -204,16 +216,28 @@ class Formerly_FormsService extends BaseApplicationComponent
 			$questionRecord = new Formerly_QuestionRecord();
 		}
 
+		if ($question->type == Formerly_QuestionType::CustomList) {
+			$question->type = Formerly_QuestionType::Checkboxes;
+			$question->handle = Formerly_QuestionType::CustomListHandle . $question->handle;
+		}
+		elseif ($question->type == Formerly_QuestionType::Custom) {
+			$question->handle = Formerly_QuestionType::CustomHandle . $question->handle;
+		}
+		elseif ($question->type == Formerly_QuestionType::RawHTML) {
+			$question->handle = Formerly_QuestionType::RawHTMLHandle . $question->handle;
+		}
+
 		// get or create field
 		$field = $this->fieldForQuestion($question, $form->handle);
 		$field->id      = $questionRecord->fieldId;
 		$field->groupId = $form->fieldGroupId;
+		$field->instructions 	= $question->instructions;
 
 		// set attributes on record
 		$questionRecord->formId    = $question->formId;
 		$questionRecord->required  = $question->required;
 		$questionRecord->sortOrder = $question->sortOrder;
-		$questionRecord->type      = $question->type;
+		$questionRecord->type	   = $question->type;
 
 		$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 		try
@@ -270,14 +294,16 @@ class Formerly_FormsService extends BaseApplicationComponent
 	private function questionAttributesForField(FieldModel $field)
 	{
 		$attributes = array(
-			'name'   => $field->name,
-			'handle' => $field->handle
+			'name'   		=> $field->name,
+			'handle' 		=> $field->handle,
+			'instructions' 	=> $field->instructions
 		);
 
 		switch ($field->type)
 		{
 			case 'Dropdown':
 			case 'RadioButtons':
+			case 'CustomList':
 			case 'Checkboxes':
 
 				$attributes['options'] = $field->settings['options'];
@@ -324,13 +350,48 @@ class Formerly_FormsService extends BaseApplicationComponent
 
 				break;
 
-			/*case Formerly_QuestionType::FileUpload:
+			case Formerly_QuestionType::CustomList:
 
-				// todo
+				$field->type = 'Checkboxes';
+				$field->settings = array(
+					'options' => $question->options
+				);
 
-				break;*/
+				break;
 
+			case Formerly_QuestionType::Assets:
 
+				$folderId = 1;
+				$allowedKinds = array("excel","image","pdf","text","word");
+
+				if (craft()->config->exists(Formerly_ConfigSettings::SettingsGroupName))
+				{
+					if (array_key_exists(Formerly_ConfigSettings::UploadAssetFolderId, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)))
+					{
+						$folderId = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::UploadAssetFolderId];
+					}
+					if (array_key_exists(Formerly_ConfigSettings::AllowedKinds, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)))
+					{
+						$allowedKinds = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::AllowedKinds];
+					}
+				}
+
+				$field->type = 'Assets';
+				$field->settings = array(
+					'useSingleFolder' 				=> '1',
+					'sources'						=> array('folder:' . $folderId),
+					'defaultUploadLocationSource'	=> '1',
+					'defaultUploadLocationSubpath' 	=> '',
+					'singleUploadLocationSource'	=> $folderId,
+					'singleUploadLocationSubpath'	=> '',
+					'restrictFiles'					=> '1',
+					'allowedKinds'					=> $allowedKinds,
+					'limit'							=> '1'
+				);
+				break;
+
+			case Formerly_QuestionType::RawHTML:
+				$field->type = 'PlainText';
 
 			case Formerly_QuestionType::Email:
 				$field->type = 'PlainText';

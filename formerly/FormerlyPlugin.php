@@ -10,7 +10,7 @@ class FormerlyPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-	    return '1.3.1';
+	    return '1.3.2';
 	}
 
 	public function getDeveloper()
@@ -36,6 +36,7 @@ class FormerlyPlugin extends BasePlugin
 			'formerly/forms/(?P<formId>\d+)'                          => array('action' => 'formerly/forms/editForm'),
 			'formerly'                                                => array('action' => 'formerly/submissions/index'),
 			'formerly/(?P<formHandle>{handle})/(?P<submissionId>\d+)' => array('action' => 'formerly/submissions/viewSubmission'),
+			'formerly/(?P<formHandle>{handle})/file/(?P<fileId>\d+)'  => array('action' => 'formerly/submissions/viewUpload'),
 			'formerly/export'                                         => array('action' => 'formerly/export/index'),
 			'formerly/export/csv'                                     => array('action' => 'formerly/export/csv')
 		);

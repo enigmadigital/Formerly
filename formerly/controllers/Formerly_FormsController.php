@@ -119,11 +119,12 @@ class Formerly_FormsController extends BaseController
 					$question = new Formerly_QuestionModel();
 				}
 
-				$question->name      = $postedQuestion['name'];
-				$question->handle    = FormerlyHelpers::generateHandle($question->name);
-				$question->required  = (bool) $postedQuestion['required'];
-				$question->type      = $postedQuestion['type'];
-				$question->sortOrder = ++$sortOrder;
+				$question->name      	= $postedQuestion['name'];
+				$question->instructions = $postedQuestion['instructions'];
+				$question->handle    	= FormerlyHelpers::generateHandle($question->name);
+				$question->required 	= (bool) $postedQuestion['required'];
+				$question->type      	= $postedQuestion['type'];
+				$question->sortOrder 	= ++$sortOrder;
 
 				if (isset($postedQuestion['options']))
 				{
@@ -133,7 +134,7 @@ class Formerly_FormsController extends BaseController
 					{
 						$options[] = array(
 							'label'   => $postedOption['label'],
-							'value'   => $postedOption['label'],
+							'value'   => $postedOption['value'] ? $postedOption['value'] : $postedOption['label'],
 							'default' => (bool) $postedOption['default'],
 						);
 					}

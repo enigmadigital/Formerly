@@ -4,24 +4,40 @@
 {% block content %}
 	<table class="data fullwidth">
 		<tbody>
+				<tr>
+					<th>Submitted</th>
+					<td>{{  submission.dateCreated.format('d/m/Y H:i:s') }}</td>
+
+				</tr>
 			{% for question in submission.getForm().getQuestions() %}
 				<tr>
-					<th>{{ question.name }}</th>
-
-					<td>
-						{% if question.type in ['Dropdown', 'RadioButtons', 'Checkboxes'] %}
+					{% if question.type != 'RawHTML' %}
+						<th>{{ question.name }}</th>
+						<td>
 							{% set data = submission[question.handle] %}
-							{% for option in data.getOptions() %}
-								{{ option.label }}: {{ option.selected ? 'yes' : 'no' }}
-								{% if not loop.last %}
+							{% if question.type in ['CustomList'] %}
+								{% for option in data %}
+									{% set orginalOption = data.getOptions()[loop.index-1] %}
+									{{ orginalOption.label }}  ( {{ option.value }}  ) : {{ option.selected ? 'yes' : 'no' }}
+									{% if not loop.last %}
 									<br>
-								{% endif %}
-							{% endfor %}
-						{% else %}
-							{{ submission[question.handle] }}
-						{% endif %}
-					</td>
-				</tr>
+									{% endif %}
+								{% endfor %}
+							{% elseif question.type in ['Dropdown', 'RadioButtons', 'Checkboxes'] %}
+								{% for option in data.getOptions() %}
+									{{ option.label }} {{ option.value != option.label ?  '( ' ~ option.value ~ ' )' }} : {{ option.selected ? 'yes' : 'no' }}
+									{% if not loop.last %}
+										<br>
+									{% endif %}
+								{% endfor %}
+							{% elseif question.type in ['Assets'] %}
+								{{ submission.downloadLink(question.handle) | raw }}
+							{% else %}
+								{{ submission[question.handle] }}
+							{% endif %}
+						</td>
+					</tr>
+				{% endif %}
 			{% endfor %}
 		</tbody>
 	</table>

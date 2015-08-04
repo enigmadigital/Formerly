@@ -40,28 +40,39 @@ class Formerly_ExportController extends BaseController
 
 			foreach($form->getQuestions() as $question)
 			{
-				$columnName = str_replace($form->handle . '_', '', $question->handle);
-				$columnName = ucwords($columnName);
+				if ($question->type != 'RawHTML') {
+					$columnName = str_replace($form->handle . '_', '', $question->handle);
+					$columnName = str_replace(Formerly_QuestionType::CustomListHandle, '', $columnName);
+					$columnName = str_replace(Formerly_QuestionType::RawHTMLHandle, '', $columnName);
+					$columnName = str_replace(Formerly_QuestionType::CustomHandle, '', $columnName);
+					$columnName = ucwords($columnName);
 
-				$row[$columnName] = $submission->{$question->handle};
-                $value = $submission->{$question->handle};
-                if($value instanceof MultiOptionsFieldData)
-                {
-                    $options = $value->getOptions();
+					$row[$columnName] = $submission->{$question->handle};
+					$value = $submission->{$question->handle};
+					if ($value instanceof MultiOptionsFieldData) {
+						$options = $value->getOptions();
 
-                    $summary = array();
-                    for ($j = 0; $j < count($options); ++$j)
-                    {
-                        $option = $options[$j];
-                        if($option->selected)
-                            $summary[] = $option->label;
-                    }
-					$row[$columnName] = implode($summary, ', ');
+						$summary = array();
+						if ($question->type == Formerly_QuestionType::CustomList) {
+							for ($j = 0; $j < count($value); ++$j) {
+								$v = $value[$j];
+								if ($v->selected) {
+									$summary[] = $v->value;
+								}
+							}
+						} else {
+							for ($j = 0; $j < count($options); ++$j) {
+								$option = $options[$j];
+								if ($option->selected)
+									$summary[] = $option->value;
+							}
+						}
+						$row[$columnName] = implode($summary, ', ');
+					} else {
+						if ($question->type != Formerly_QuestionType::RawHTML)
+							$row[$columnName] = $value;
+					}
 				}
-				else
-				{
-   					$row[$columnName] = $value;
-   				}
 			}
 
             if ($first) {

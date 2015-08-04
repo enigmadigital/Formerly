@@ -25,7 +25,30 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			return true;
 		}
 
+
+
 		return false;
+	}
+
+	public function alreadySubmitted($email, $formId) {
+		$alreadySubmitted = false;
+
+		$criteria = craft()->elements->getCriteria('Formerly_Submission');
+		$criteria-> search = $email;
+
+		foreach($criteria->find() as $submission)
+		{
+			if ($submission->formId == $formId) {
+				$alreadySubmitted = true;
+			}
+		}
+
+		if ($alreadySubmitted) {
+			return true;
+		}
+
+		return false;
+
 	}
 
 	public function saveSubmission(Formerly_SubmissionModel $submission)
@@ -39,45 +62,42 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		if (!$submission->hasErrors())
 		{
-            $alreadySubmitted = false;
-            $email = '';
+			//Check for honeypot
+			if (craft()->config->exists(Formerly_ConfigSettings::SettingsGroupName) &&
+				array_key_exists(Formerly_ConfigSettings::HoneyPotName, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName))) {
+				$honeyPotName =  craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::HoneyPotName];
+				if ($_REQUEST[$honeyPotName] != null) {
+					//ooh we have data in our honeypot!
+					//don't flag an error just return back
+					return false;
+				}
+			}
+
             foreach ($_REQUEST['questions'] as $key => $value) {
                 if (strpos($key, 'email') > -1)
                     $email = $value;
             }
 
-            $criteria = craft()->elements->getCriteria('Formerly_Submission');
-            $criteria-> search = $email;
+			$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+			try {
+				if (craft()->elements->saveElement($submission)) {
+					$submissionRecord->id = $submission->id;
 
-            foreach($criteria->find() as $submission)
-            {
-                $alreadySubmitted = true;
-            }
+					$submissionRecord->save(false);
 
-            if ($alreadySubmitted)
-                return true;
-            else {
-                $transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
-                try {
-                    if (craft()->elements->saveElement($submission)) {
-                        $submissionRecord->id = $submission->id;
+					if ($transaction !== null) {
+						$transaction->commit();
+					}
 
-                        $submissionRecord->save(false);
-
-                        if ($transaction !== null) {
-                            $transaction->commit();
-                        }
-
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } catch (\Exception $ex) {
-                    if ($transaction !== null) {
-                        $transaction->rollback();
-                    }
-                }
-            }
+					return true;
+				} else {
+					return false;
+				}
+			} catch (\Exception $ex) {
+				if ($transaction !== null) {
+					$transaction->rollback();
+				}
+			}
 		}
 
 		return false;
@@ -159,10 +179,38 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 	{
 		$formHandle = $submission->getForm()->handle;
 
-		$formattedTemplate = preg_replace('/(?<![\{\%])\{(?![\{\%])/', '{'.$formHandle.'_', $template);
-		$formattedTemplate = preg_replace('/(?<![\}\%])\}(?![\}\%])/', '}', $formattedTemplate);
+		$formattedTemplate = $template;
 
-		return craft()->templates->renderObjectTemplate($formattedTemplate, $submission);
+		//check that all the tags are valid before passing them to the template engine, otherwise it
+		//crashes with a obscure error
+		preg_match_all('/{([^}]*)}/', $template, $matches);
+		$qs = $submission->getForm()->getQuestions();
+		$tagsAllFound = true;
+		foreach ($matches[1] as $a ){
+			foreach ($qs as $q) {
+				if ($q->handle == $formHandle . '_' . $a) {
+					//this is a valid twig field replace it with a temporary start and end tag
+					//(because we want to replace all non matches later with something so twig doesn't try to replace the nonmatches)
+					$formattedTemplate = str_replace("{" . $a . "}" , "@@@1" . $formHandle . '_' . $a . '1@@@', $formattedTemplate);
+					break;
+				}
+			}
+		}
+
+		//replace any stragglers
+		$formattedTemplate = str_replace("{" , "<<<", $formattedTemplate);
+		$formattedTemplate = str_replace("}" , ">>>", $formattedTemplate);
+
+		//fix up actual matches
+		$formattedTemplate = str_replace("@@@1" , "{", $formattedTemplate);
+		$formattedTemplate = str_replace("1@@@" , "}", $formattedTemplate);
+
+		$result = craft()->templates->renderObjectTemplate($formattedTemplate, $submission);
+		//put unmatched handles back the way they were
+		$result = str_replace('<<<', '{', $result);
+		$result = str_replace(">>>" , "}" , $result);
+
+		return $result;
 	}
 
 	public function onBeforePost(Event $event)

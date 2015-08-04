@@ -45,6 +45,12 @@ class Formerly_SubmissionModel extends BaseElementModel
 		}
 	}
 
+	public function downloadLink($handle) {
+		if (sizeof($this[$handle]) > 0) {
+			return '<a href="/admin/formerly/survey/file/' . $this[$handle][0]->id . '">Download <i>' . $this[$handle][0]->title . '</i></a>';
+		}
+	}
+
 	public function __toString()
 	{
 		return "#$this->id";
@@ -60,35 +66,36 @@ class Formerly_SubmissionModel extends BaseElementModel
 		{
 			$question = $questions[$i];
 
-			$name  = $question->name;
-			$value = $this[$question->handle];
-
-			$summary .= $name . ":\n";
-
-			if ($value instanceof MultiOptionsFieldData)
+			if ($question->type != Formerly_QuestionType::Assets &&
+				$question->type != Formerly_QuestionType::CustomList &&
+				$question->type != Formerly_QuestionType::RawHTML &&
+				$question->type != Formerly_QuestionType::Custom )
 			{
-				$options = $value->getOptions();
+				$name = $question->name;
+				$value = $this[$question->handle];
 
-				for ($j = 0; $j < count($options); ++$j)
-				{
-					$option = $options[$j];
+				$summary .= $name . ":";
 
-					$summary .= $option->label . ': ' . ($option->selected ? 'yes' : 'no');
-				 
-					if ($j != count($options) - 1)
-					{
-						$summary .= "\n";
+				if ($value instanceof MultiOptionsFieldData) {
+					$options = $value->getOptions();
+
+					for ($j = 0; $j < count($options); ++$j) {
+						$option = $options[$j];
+
+						$summary .= '<br />' . $option->label . ($option->value != $option->label ?  '( ' . $option->value . ' )' : '') . ': ' .  ($option->selected ? 'yes' : 'no') ;
+
+
+						if ($j != count($options) - 1) {
+							$summary .= "<br />";
+						}
 					}
+				} else {
+					$summary .= str_replace("\n", '<br />', $value) . '<br />';
 				}
-			}
-			else
-			{
-				$summary .= $value;
-			}
 
-			if ($i != count($questions) - 1)
-			{
-				$summary .= "\n\n";
+				if ($i != count($questions) - 1) {
+					$summary .= "<br />";
+				}
 			}
 		}
 

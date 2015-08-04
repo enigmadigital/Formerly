@@ -45,7 +45,10 @@ class Formerly_SubmissionElementType extends BaseElementType
 		{
 			foreach ($form->getQuestions() as $question)
 			{
-				if ($question->type != Formerly_QuestionType::MultilineText)
+				if ($question->type != Formerly_QuestionType::MultilineText &&
+					$question->type != Formerly_QuestionType::CustomList &&
+					$question->type != Formerly_QuestionType::Assets &&
+					$question->type != Formerly_QuestionType::Checkboxes )
 				{
 					$attributes[$question->handle] = $question->name;
 				}

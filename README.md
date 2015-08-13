@@ -1,4 +1,4 @@
-# Formerly 1.3.2
+# Formerly 1.3.3
 
 ## Installing
 
@@ -55,6 +55,8 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 ```
 
 ## Updates
+* 1.3.3
+  * fix to honeypot code so syntax works in php 5.2
 * 1.3.2
   * support for ajax posting of forms
   * file upload type (add 'assetFolderId' => <id of asset folder to store files> to your config)

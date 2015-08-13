@@ -65,7 +65,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			//Check for honeypot
 			if (craft()->config->exists(Formerly_ConfigSettings::SettingsGroupName) &&
 				array_key_exists(Formerly_ConfigSettings::HoneyPotName, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName))) {
-				$honeyPotName =  craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::HoneyPotName];
+				$honeyPotName =  craft()->config->get(Formerly_ConfigSettings::SettingsGroupName, Formerly_ConfigSettings::HoneyPotName);
 				if ($_REQUEST[$honeyPotName] != null) {
 					//ooh we have data in our honeypot!
 					//don't flag an error just return back

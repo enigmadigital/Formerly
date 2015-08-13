@@ -368,11 +368,11 @@ class Formerly_FormsService extends BaseApplicationComponent
 				{
 					if (array_key_exists(Formerly_ConfigSettings::UploadAssetFolderId, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)))
 					{
-						$folderId = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::UploadAssetFolderId];
+						$folderId = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName, Formerly_ConfigSettings::UploadAssetFolderId);
 					}
 					if (array_key_exists(Formerly_ConfigSettings::AllowedKinds, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)))
 					{
-						$allowedKinds = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::AllowedKinds];
+						$allowedKinds = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName, Formerly_ConfigSettings::AllowedKinds);
 					}
 				}
 

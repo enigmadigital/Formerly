@@ -120,7 +120,7 @@ class Formerly_SubmissionsController extends BaseController
 		if (craft()->formerly_submissions->postSubmission($submission))
 		{
 			if (craft()->request->isAjaxRequest())
-				$this->returnJson(array('ok' => 'yes'));
+				$this->returnJson(array('ok' => 'yes', 'id' => $submission->id));
 			else
 				$this->redirectToPostedUrl($submission);
 		}

@@ -5,6 +5,8 @@
 {% macro questionMarkup(formhandle, id, question) %}
 	{% import '_includes/forms' as forms %}
 
+	{{ getCsrfInput() }}
+
 	<div class="question matrixblock" data-id="{{ id }}">
 		<div class="titlebar nocheckbox">
 			<div class="blocktype"></div>

@@ -16,6 +16,21 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		if ($this->saveSubmission($submission))
 		{
+			//Find any multiline text fields and replace \n with break tags
+			foreach ($submission->getForm()->getQuestions() as $question)
+				if ($question->type == 'MultilineText') {
+					$handle = $question['handle'];
+					$answer = $submission[$handle];
+					$answer = str_replace("\n", '<br />', $answer);
+					$submission->getContent()->setAttributes(array(
+						$handle => $answer
+					));
+					craft()->elements->saveElement($submission);
+					$answer = $submission[$handle];
+				}
+
+			$submission = craft()->elements->getElementById($submission->id, 'Formerly_Submission');
+
 			$this->sendSubmissionEmails($submission);
 
 			$this->onPost(new Event($this, array(
@@ -59,6 +74,10 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		$submissionRecord->validate();
 		$submission->addErrors($submissionRecord->getErrors());
+
+		$this->onAfterValidate(new Event($this, array(
+			'submission' => $submission
+		)));
 
 		if (!$submission->hasErrors())
 		{
@@ -217,6 +236,12 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 	{
 		$this->raiseEvent('onBeforePost', $event);
 	}
+
+	public function onAfterValidate(Event $event)
+	{
+		$this->raiseEvent('onAfterValidate', $event);
+	}
+
 
 	public function onPost(Event $event)
 	{

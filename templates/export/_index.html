@@ -7,6 +7,8 @@
 	export:      { label: 'Export'|t, url: url('formerly/export') }
 } %}
 
+{% import '_includes/forms' as cforms %}
+
 {% set selectedTab = 'export' %}
 
 {% set content %}
@@ -26,6 +28,13 @@
 						{% endfor %}
 					</select>
 				</div>
+
+				{{ cforms.dateField({
+					label: 'Export listings from before'|t,
+					id: "fromDate",
+					name: "fromDate",
+				}) }}
+
 			</div>
 
 			<div class="button last">

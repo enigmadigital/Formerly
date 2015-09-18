@@ -25,13 +25,14 @@
 								{% endfor %}
 							{% elseif question.type in ['Dropdown', 'RadioButtons', 'Checkboxes'] %}
 								{% for option in data.getOptions() %}
-									{{ option.label }} {{ option.value != option.label ?  '( ' ~ option.value ~ ' )' }} : {{ option.selected ? 'yes' : 'no' }}
-									{% if not loop.last %}
-										<br>
+									{% if option.selected %}
+										{{ option.value }}
 									{% endif %}
 								{% endfor %}
 							{% elseif question.type in ['Assets'] %}
 								{{ submission.downloadLink(question.handle) | raw }}
+							{% elseif question.type in ['MultilineText'] %}
+								{{ submission[question.handle] | raw }}
 							{% else %}
 								{{ submission[question.handle] }}
 							{% endif %}

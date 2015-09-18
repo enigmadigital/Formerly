@@ -1,4 +1,4 @@
-# Formerly 1.3.3
+# Formerly 1.3.4
 
 ## Installing
 
@@ -55,6 +55,11 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 ```
 
 ## Updates
+* 1.3.4
+  * Add to and from date filters to export
+  * replace \n with <br> for multilinetext submissions
+  * just show multioption selected value not all available options
+  * Fix memory error when exporting large csv, queries in blocks 500 submissions rather than all 
 * 1.3.3
   * fix to honeypot code so syntax works in php 5.2
 * 1.3.2
@@ -99,7 +104,5 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 
 ## Todo
 
-* File uploads
 * Better validation
 * More question attributes, e.g. placeholder, error messages
-* Date range selection for data export

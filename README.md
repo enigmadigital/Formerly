@@ -1,4 +1,4 @@
-# Formerly 1.3.4
+# Formerly 1.3.5
 
 ## Installing
 
@@ -55,11 +55,24 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 ```
 
 ## Updates
+* 1.3.5
+  * change settings back to use newer syntax
+  * Add html markup to default email
+  * add sendEmails flag, so you can disable email sending in an environment (eg. dev)
+      ```php
+      'formerly' => array(
+          'sendEmails' => false
+      ),      
+  * add writeEmailBodyToFilePath setting, logs emails in json format in the path specified
+      ```php
+      'formerly' => array(
+        'writeEmailBodyToFilePath' => '/vagrant/emails',
+      )  
 * 1.3.4
   * Add to and from date filters to export
   * replace \n with <br> for multilinetext submissions
   * just show multioption selected value not all available options
-  * Fix memory error when exporting large csv, queries in blocks 500 submissions rather than all 
+  * Fix memory error when exporting large csv, queries in blocks 500 submissions rather than all
 * 1.3.3
   * fix to honeypot code so syntax works in php 5.2
 * 1.3.2

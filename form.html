@@ -58,6 +58,8 @@ Set these config settings in /craft/config/general.php as needed
 			'honeyPotName' => 'pants', //id of input honeypot, don't call it something obvious like honeypot
 			'assetFolderId' => 6,  //id of the folder you want to put assets in, note - you should secure this folder from browsing
 			'allowedKinds' =>  array("excel","image","pdf","text","word"), //valid types of files users can upload
+			'writeEmailBodyToFilePath' => '/vagrant/emails', //if specified a json copy of the email is written to the path
+			'sendEmails' => false //should formerly send emails. default to true
 		),
 
 #}

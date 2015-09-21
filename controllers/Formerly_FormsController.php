@@ -41,7 +41,7 @@ class Formerly_FormsController extends BaseController
 						'to'      => '{email}',
 						'from'    => $user->email,
 						'subject' => 'Thank you for your enquiry',
-						'body'    => "Hi {name},\n\nThanks for your enquiry! We'll get back to you shortly.\n\n$user->name",
+						'body'    => "<p>Hi {name},</p>\n<p>Thanks for your enquiry! We'll get back to you shortly.</p>\n<p>$user->name</p>",
 					),
 					array(
 						'to'      => $user->email,

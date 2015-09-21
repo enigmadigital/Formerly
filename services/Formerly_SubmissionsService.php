@@ -84,8 +84,8 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			//Check for honeypot
 			if (craft()->config->exists(Formerly_ConfigSettings::SettingsGroupName) &&
 				array_key_exists(Formerly_ConfigSettings::HoneyPotName, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName))) {
-				$honeyPotName =  craft()->config->get(Formerly_ConfigSettings::SettingsGroupName, Formerly_ConfigSettings::HoneyPotName);
-				if ( isset ($_REQUEST[$honeyPotName]) && $_REQUEST[$honeyPotName] != null) {
+				$honeyPotName =  craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::HoneyPotName];
+				if (array_key_exists($honeyPotName, $_REQUEST) && $_REQUEST[$honeyPotName] != null) {
 					//ooh we have data in our honeypot!
 					//don't flag an error just return back
 					return false;
@@ -143,9 +143,23 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			return false;
 		}
 
+		$sendEmail = true;
+		$writeEmailToFilePath = '';
+
+		//Check settings
+		if (craft()->config->exists(Formerly_ConfigSettings::SettingsGroupName) &&
+			array_key_exists(Formerly_ConfigSettings::SendEmails, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName))) {
+			$sendEmail = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::SendEmails];
+		}
+
+		if (craft()->config->exists(Formerly_ConfigSettings::SettingsGroupName) &&
+			array_key_exists(Formerly_ConfigSettings::writeEmailBodyToFilePath, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName))) {
+			$writeEmailToFilePath = craft()->config->get(Formerly_ConfigSettings::SettingsGroupName)[Formerly_ConfigSettings::writeEmailBodyToFilePath];
+		}
+
 		$form = $submission->getForm();
 
-		if ($form->emails !== null)
+		if ($form->emails !== null && ($sendEmail || strlen($writeEmailToFilePath) > 0))
 		{
 			foreach ($form->emails as $emailDef)
 			{
@@ -186,9 +200,21 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 					$email->htmlBody = $email->body;
 				}
 
-				if (!empty($email->body))
+				if (!empty($email->body && $sendEmail))
 				{
 					craft()->email->sendEmail($email);
+				}
+
+				if (strlen($writeEmailToFilePath) > 0) {
+						$file = $writeEmailToFilePath . '/form-' . $form->id . '-submission-' . $submission->id . '.json';
+						$jsonEmail = new \StdClass();
+						$jsonEmail->toEmail = $email->toEmail;
+						$jsonEmail->fromName = $email->fromName;
+						$jsonEmail->fromEmail = $email->fromEmail;
+						$jsonEmail->subject = $email->subject;
+						$jsonEmail->body = $email->body;
+
+						file_put_contents($file, json_encode($jsonEmail));
 				}
 			}
 		}

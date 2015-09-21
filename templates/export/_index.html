@@ -30,9 +30,16 @@
 				</div>
 
 				{{ cforms.dateField({
-					label: 'Export listings from before'|t,
+					label: 'Export listings from'|t,
 					id: "fromDate",
 					name: "fromDate",
+				}) }}
+
+
+				{{ cforms.dateField({
+					label: 'Export listings up to'|t,
+					id: "toDate",
+					name: "toDate",
 				}) }}
 
 			</div>

@@ -63,11 +63,13 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
       'formerly' => array(
           'sendEmails' => false
       ),      
+      ```
   * add writeEmailBodyToFilePath setting, logs emails in json format in the path specified
       ```php
       'formerly' => array(
         'writeEmailBodyToFilePath' => '/vagrant/emails',
-      )  
+      )
+      ```
 * 1.3.4
   * Add to and from date filters to export
   * replace \n with <br> for multilinetext submissions

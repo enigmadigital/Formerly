@@ -200,7 +200,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 					$email->htmlBody = $email->body;
 				}
 
-				if (!empty($email->body && $sendEmail))
+				if (!empty($email->body) && $sendEmail)
 				{
 					craft()->email->sendEmail($email);
 				}

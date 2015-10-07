@@ -20,6 +20,14 @@ class Formerly_FormModel extends BaseModel
 		return craft()->formerly_forms->getQuestionsByFormId($this->id);
 	}
 
+	public function getQuestionByHandle($handle) {
+		foreach (craft()->formerly_forms->getQuestionsByFormId($this->id) as $question) {
+			if ($question->handle == $handle)
+				return $question;
+		}
+		return null;
+	}
+
 	public function getFieldLayout()
 	{
 		return craft()->formerly_forms->getFieldLayout($this);

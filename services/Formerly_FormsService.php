@@ -238,6 +238,10 @@ class Formerly_FormsService extends BaseApplicationComponent
 		$questionRecord->required  = $question->required;
 		$questionRecord->sortOrder = $question->sortOrder;
 		$questionRecord->type	   = $question->type;
+		$questionRecord->errorMessage = $question->errorMessage;
+		$questionRecord->validationPattern = $question->validationPattern;
+
+
 
 		$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 		try
@@ -296,7 +300,7 @@ class Formerly_FormsService extends BaseApplicationComponent
 		$attributes = array(
 			'name'   		=> $field->name,
 			'handle' 		=> $field->handle,
-			'instructions' 	=> $field->instructions
+			'instructions' 	=> $field->instructions,
 		);
 
 		switch ($field->type)

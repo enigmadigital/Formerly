@@ -27,29 +27,36 @@
 		{% endif %}
 
 		<div class="fields">
-			{{ forms.textField({
-				label: question ? 'Name<br /><div class="instructions">Use the tag {' ~ question.handle | replace({ (formhandle ~ '_'): '' }) ~ '} to insert this field into an email</div>' : 'Name'|t,
+{% if question %}
+			{% set emailPrefix = formhandle ~ '_' %}
+			<h2 {{ question.required ? 'class="required"' }}>{{ question.name }}</h2>
+			{% if question and question.instructions %}
+				<p>{{ question.instructions }}</p>
+			{% endif %}
+{% endif %}
+			<h4><a class="fieldtoggle {{ question ? "" : "expanded" }}" data-target="basicSettings-{{ id }}">Settings</a></h4>
+
+			<div id="basicSettings-{{ id }}" class="nested-fields {{ question ? 'hidden' }}">
+
+
+				{% if question %}
+				<div class="field" id="questions-15-name-field">
+					<div class="heading">
+						<label for="questions-15-name">Email Tag
+						</label>
+					</div>
+					<div class="input ltr">
+						{{'{' ~ (question ?  question.handle | replace({(emailPrefix) : ''})) ~ '}'}}
+					</div>
+				</div>
+				{% endif %}
+
+				{{ forms.textField({
+				label: 'Name '|t,
 				id: "questions-#{id}-name",
 				name: "questions[#{id}][name]",
 				value: question ? question.name,
 				errors: question ? question.getErrors('name')
-			}) }}
-
-			{{ forms.textField({
-				label: 'Instructions'|t,
-				id: "questions-#{id}-instructions",
-				name: "questions[#{id}][instructions]",
-				instructions: "If the label for your question is larger than 50 characters keep the name short and enter the full label here",
-				value: question ? question.instructions,
-				errors: question ? question.getErrors('instructions')
-			}) }}
-
-			{{ forms.checkbox({
-				label: 'Required'|t,
-				id: "questions-#{id}-required",
-				name: "questions[#{id}][required]",
-				checked: question ? question.required,
-				errors: question ? question.getErrors('required')
 			}) }}
 
 			{{ forms.selectField({
@@ -76,9 +83,23 @@
 				}
 			}) }}
 
+				{{ forms.textField({
+					label: 'Instructions'|t,
+					id: "questions-#{id}-instructions",
+					name: "questions[#{id}][instructions]",
+					instructions: "If the label for your question is larger than 50 characters keep the name short and enter the full label here",
+					value: question ? question.instructions,
+					errors: question ? question.getErrors('instructions')
+				}) }}
+
+
+			</div>
+
 			<div class="options">
+				<h4><a class="fieldtoggle {{ question ? "" : "expanded" }}" data-target="optionsSettings-{{ id }}">List Values</a></h4>
+
+				<div id="optionsSettings-{{ id }}" class="nested-fields {{ question ? 'hidden' }}">
 				{{ forms.editableTableField({
-					label: 'Options',
 					id: "questions-#{id}-options",
 					name: "questions[#{id}][options]",
 					cols: {
@@ -99,7 +120,39 @@
 					},
 					rows: question ? question.options
 				}) }}
+				</div>
 			</div>
+
+			<h4><a class="fieldtoggle {{ question ? "" : "expanded" }}" data-target="advancedSettings-{{ id }}">Validation</a></h4>
+
+			<div id="advancedSettings-{{ id }}" class="nested-fields  {{ question ? 'hidden' }}">
+				{{ forms.checkbox({
+					label: 'Required'|t,
+					id: "questions-#{id}-required",
+					name: "questions[#{id}][required]",
+					checked: question ? question.required,
+					errors: question ? question.getErrors('required')
+				}) }}
+
+				{{ forms.textField({
+					label: 'Custom Error Message'|t,
+					id: "questions-#{id}-errorMessage",
+					name: "questions[#{id}][errorMessage]",
+					value: question ? question.errorMessage,
+					errors: question ? question.getErrors('errorMessage')
+				}) }}
+
+				{{ forms.textField({
+					label: 'Validation Pattern'|t,
+					id: "questions-#{id}-validationPattern",
+					name: "questions[#{id}][validationPattern]",
+					size: "15",
+					value: question ? question.validationPattern,
+					errors: question ? question.getErrors('validationPattern')
+				}) }}
+
+			</div>
+
 		</div>
 	</div>
 {% endmacro %}
@@ -145,7 +198,6 @@
 		<h2>Emails</h2>
 
 		{{ forms.editableTableField({
-			label: 'Options',
 			id: 'emails',
 			name: 'emails',
 			cols: {

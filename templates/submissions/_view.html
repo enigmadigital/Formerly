@@ -24,8 +24,11 @@
 									{% endif %}
 								{% endfor %}
 							{% elseif question.type in ['Dropdown', 'RadioButtons', 'Checkboxes'] %}
+								{% set first = true %}
 								{% for option in data.getOptions() %}
 									{% if option.selected %}
+										{{ first == false ? ', ' }}
+										{% set first = false %}
 										{{ option.value }}
 									{% endif %}
 								{% endfor %}

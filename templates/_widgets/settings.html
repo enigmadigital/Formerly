@@ -1,0 +1,116 @@
+
+{% import "_includes/forms" as forms %}
+
+<div class="field first">
+  <div class="heading">
+    <label for="colspan">Columns</label>
+  </div>
+  <div class="input ltr">
+    <div class="select">
+      <select name="colspan">
+        <option {{ settings.colspan == 1 ? 'selected="selected"' }} value="1">1</option>
+        <option {{ settings.colspan == 2 ? 'selected="selected"' }} value="2">2</option>
+        <option {{ settings.colspan == 3 ? 'selected="selected"' }} value="3">3</option>
+        <option {{ settings.colspan == 4 ? 'selected="selected"' }} value="4">4</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="field">
+  <div class="heading">
+    <label class="required" for="limit">Custom Title</label>
+    <div class="instructions">
+      <p>If blank, will display Formerly - Formname</p>
+    </div>
+  </div>
+  <div class="input ltr">
+    <input type="text" class="text fullwidth" id="customtitle" name="customtitle" value="{{ settings.customtitle }}" />
+  </div>
+</div>
+
+<div class="field">
+  <div class="heading">
+    <label class="required" for="form">Form</label>
+  </div>
+  <div class="input ltr">
+    <div class="select">
+      <select name="form">
+        {% for id, form in formerlyforms %}
+          <option {{ id == settings.form ? 'selected="selected"' }} value="{{ id }}">{{ form }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>
+
+<h3>Recent submissions settings</h3>
+
+<div class="field">
+  <div class="heading">
+    <label class="required" for="limit">Number of submissions to show</label>
+    <div class="instructions">
+      <p>Enter 0 to not show a recent submissions list</p>
+    </div>
+  </div>
+  <div class="input ltr">
+    <input type="text" class="text fullwidth" id="limit" name="limit" value="{{ settings.limit }}" />
+  </div>
+</div>
+
+<div class="field">
+  <div class="heading">
+    <label class="required" for="columns">Number of data columns to show</label>
+  </div>
+  <div class="input ltr">
+    <input type="text" class="text fullwidth" id="columns" name="columns" value="{{ settings.columns }}" />
+  </div>
+</div>
+
+<h3>Bar chart settings</h3>
+
+
+<div class="field first">
+  <div class="heading">
+    <label for="groupby">Group By</label>
+  </div>
+  <div class="input ltr">
+    <div class="select">
+      <select name="groupby">
+        <option {{ settings.groupby == 'Days' ? 'selected="selected"' }} value="Days">Days</option>
+        <option {{ settings.groupby == 'Weeks' ? 'selected="selected"' }} value="Weeks">Weeks</option>
+        <option {{ settings.groupby == 'Months' ? 'selected="selected"' }} value="Months">Months</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="field">
+  <div class="heading">
+    <label class="required" for="bars">Number of bars to show in chart</label>
+    <div class="instructions">
+      <p>Enter 0 to not show a chart</p>
+    </div>
+  </div>
+  <div class="input ltr">
+    <input type="text" class="text fullwidth" id="bars" name="bars" value="{{ settings.bars }}" />
+  </div>
+</div>
+
+<div class="field">
+  <div class="heading">
+    <label class="required" for="barColour">Bar Colour</label>
+  </div>
+  <div class="input ltr">
+    <input type="text" class="text fullwidth" id="barColour" name="barColour" value="{{ settings.barColour }}" />
+  </div>
+</div>
+
+<div class="field">
+  <div class="heading">
+    <label class="required" for="textColour">Text Colour</label>
+  </div>
+  <div class="input ltr">
+    <input type="text" class="text fullwidth" id="textColour" name="textColour" value="{{ settings.textColour }}" />
+  </div>
+</div>

@@ -17,6 +17,8 @@ class Formerly_QuestionRecord extends BaseRecord
 		return array(
 			'required'      => array(AttributeType::Bool, 'required' => true),
 			'sortOrder'     => array(AttributeType::SortOrder, 'required' => true),
+			'errorMessage'     => array(AttributeType::String),
+			'validationPattern'     => array(AttributeType::String),
 			'type'          => array(AttributeType::Enum, 'required' => true, 'values' => array(
 				Formerly_QuestionType::PlainText,
 				Formerly_QuestionType::MultilineText,

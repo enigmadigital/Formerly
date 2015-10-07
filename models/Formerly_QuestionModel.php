@@ -15,6 +15,8 @@ class Formerly_QuestionModel extends BaseModel
 			'name'          => AttributeType::String,
 			'handle'        => AttributeType::String,
 			'instructions'  => AttributeType::String,
+			'errorMessage'	=> AttributeType::String,
+			'validationPattern' => AttributeType::String,
 			'required'      => AttributeType::Bool,
 			'type'          => array(AttributeType::Enum, 'values' => array(
 				Formerly_QuestionType::PlainText,

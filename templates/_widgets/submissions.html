@@ -1,0 +1,64 @@
+{% if rows is defined %}
+  <h3>Recent Submissions</h3>
+  {% if rows | length == 0 %}
+    <h4>No submissions</h4>
+  {% else %}
+    <table class="data fullwidth elements">
+    {% for row in rows %}
+        {% if loop.first %}
+          <thead>
+          {% for key,value in row %}
+              <th>{{ key }}</th>
+          {% endfor %}
+          </thead>
+          <tbody>
+        {% endif %}
+        <tr>
+          {% for value in row %}
+            <td>
+              {% if loop.first  %}
+                <a href="/admin/formerly/offerClaims/{{ value }}">
+                  #{{ value }}
+                </a>
+              {% else %}
+                {{ value }}
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endif %}
+
+{% if graphData is defined %}
+  {% if rows is defined %}
+    <hr />
+  {% endif %}
+
+  <h3>Submission Summary Chart - Last {{ bars+1 }} {{ groupby }}</h3>
+  {% if graphData | length == 0 %}
+    <h4>No data found to chart</h4>
+  {%  else %}
+    <table class="fullwidth" style="min-height:270px;">
+      <tr>
+        {% for data in graphData %}
+          <td style="vertical-align:bottom; height: 250px;">
+            {% if data.count > 0 %}
+              <div style="color:{{ textColour }}; text-align:center; font-size: 10px; font-weight: bold">{{ data.count }}</div>
+              <div style="margin-left:3px; margin-right:3px; height:{{ data.height }}px; background-color:{{ barColour }}; color:{{ barColour }}; text-align:center;">{{ data.count }}</div>
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for data in graphData %}
+          <th style="border-top: 1px solid lightgrey; border-right: 1px solid lightgrey; padding:3px; font-size: 11px; line-height: 1.2; 	color: rgba(0, 0, 0, 0.5); font-weight: bold; text-align:center; ">{{ data.shortdate }}</th>
+        {% endfor %}
+      </tr>
+    </table>
+  {% endif %}
+{% endif %}
+
+<p><a href="/admin/formerly?sourceKey={{ id }}">View more submissions &raquo;</a></p>

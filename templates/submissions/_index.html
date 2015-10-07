@@ -13,4 +13,18 @@
 
 {% includeJsResource 'formerly/formerly.js' %}
 
+{% block initJs %}
+	Craft.elementIndex = Craft.createElementIndex('{{ elementTypeClass }}', $('#main'), {
+	context:        '{{ context }}',
+	showStatusMenu: {{ showStatusMenu is defined ? showStatusMenu|json_encode|raw : "'auto'" }},
+	showLocaleMenu: {{ showLocaleMenu is defined ? showLocaleMenu|json_encode|raw : "'auto'" }},
+	storageKey:     'elementindex.{{ elementTypeClass }}',
+	criteria:       { localeEnabled: null },
+	});
 
+	{% if craft.request.getParam('sourceKey') %}
+		Craft.elementIndex.selectSource($('a[data-key="{{  craft.request.getParam('sourceKey') }}"]'));
+		Craft.elementIndex.updateElements();
+	{% endif %}
+
+{% endblock %}

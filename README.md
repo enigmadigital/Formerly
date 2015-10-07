@@ -1,4 +1,4 @@
-# Formerly 1.3.5
+# Formerly 1.4.0
 
 ## Installing
 
@@ -55,6 +55,21 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 ```
 
 ## Updates
+  1.4.0
+  * Add Customer error and validation pattern to question
+  * collapse question details (with the extra fields it was getting out of control)
+  * add getQuestionbyHandle method
+  * id {id} and {siteUrl} tag replacement to emails. id is replaced by submissionid, siteUrl by craft()->config->get("siteUrl")
+  * comma listing bug in submission view
+  * Add timezoneoffset setting to adjust mysql dates for charting (eg. add 10 hours for Sydney)
+    ```php
+    'formerly' => array(
+        'timezoneOffset' => '+10:00', //Australia/Sydney
+      ),      
+    ```
+* 1.3.6
+  * Desktop widget
+  * parameter option to submissions page - pass sourcekey=<formId> in the url and it will default to that form
 * 1.3.5
   * change settings back to use newer syntax
   * Add html markup to default email

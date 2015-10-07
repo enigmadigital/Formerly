@@ -109,6 +109,12 @@ Set these config settings in /craft/config/general.php as needed
 									data-val-required="'{{ question.name }}' is required"
 									data-val="true"
 								{% endif %}
+								{% if question.errorMessage %}
+									data-validator-error-message="{{ question.errorMessage }}"
+						  	{% endif %}
+								{% if question.validationPattern %}
+									pattern="{{ question.validationPattern }}"
+								{% endif %}
 								class="text"
 								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
@@ -130,6 +136,12 @@ Set these config settings in /craft/config/general.php as needed
 									data-val-required="'{{ question.name }}' is required"
 									data-val="true"
 								{% endif %}
+								{% if question.errorMessage %}
+									data-validator-error-message="{{ question.errorMessage }}"
+						  	{% endif %}
+								{% if question.validationPattern %}
+									pattern="{{ question.validationPattern }}"
+								{% endif %}
 								class="text"
 								placeholder="{{ question.name | upper }}"
 								cols="20" rows="2"
@@ -149,6 +161,12 @@ Set these config settings in /craft/config/general.php as needed
 								aria-required="true"
 								data-val-required="'{{ question.name }}' is required"
 								data-val="true"
+								{% if question.errorMessage %}
+									data-validator-error-message="{{ question.errorMessage }}"
+						  	{% endif %}
+								{% if question.validationPattern %}
+									pattern="{{ question.validationPattern }}"
+								{% endif %}
 							{% endif %}
 							id="{{ question.handle }}"
 							name="questions[{{ question.handle }}]">
@@ -229,6 +247,12 @@ Set these config settings in /craft/config/general.php as needed
 												   data-val-required="'{{ question.name }}' is required"
 												   data-val="true"
 											   {% endif %}
+												 {% if question.errorMessage %}
+				 									data-validator-error-message="{{ question.errorMessage }}"
+				 						  	{% endif %}
+				 								{% if question.validationPattern %}
+				 									pattern="{{ question.validationPattern }}"
+				 								{% endif %}
 											   {% if submission is defined %}
 												value="{{ submission[question.handle][loop.index-1] }}"
 											   {% endif %}
@@ -273,6 +297,12 @@ Set these config settings in /craft/config/general.php as needed
 									data-val-required="'{{ question.name }}' is required"
 									data-val="true"
 								{% endif %}
+								{% if question.errorMessage %}
+									data-validator-error-message="{{ question.errorMessage }}"
+						  	{% endif %}
+								{% if question.validationPattern %}
+									pattern="{{ question.validationPattern }}"
+								{% endif %}
 								class="text"
 								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
@@ -294,6 +324,12 @@ Set these config settings in /craft/config/general.php as needed
 									data-val-required="'{{ question.name }}' is required"
 									data-val="true"
 								{% endif %}
+								{% if question.errorMessage %}
+									data-validator-error-message="{{ question.errorMessage }}"
+						  	{% endif %}
+								{% if question.validationPattern %}
+									pattern="{{ question.validationPattern }}"
+								{% endif %}
 								class="text"
 								placeholder="{{ question.name | upper }}"
 								id="{{ question.handle }}"
@@ -314,6 +350,12 @@ Set these config settings in /craft/config/general.php as needed
 									aria-required="true"
 									data-val-required="'{{ question.name }}' is required"
 									data-val="true"
+								{% endif %}
+								{% if question.errorMessage %}
+									data-validator-error-message="{{ question.errorMessage }}"
+						  	{% endif %}
+								{% if question.validationPattern %}
+									pattern="{{ question.validationPattern }}"
 								{% endif %}
 								class="text"
 								placeholder="{{ question.name | upper }}"
@@ -337,7 +379,14 @@ Set these config settings in /craft/config/general.php as needed
 									data-val="true"
 								{% endif %}
 								class="text"
-								pattern="\d{2}\/\d{2}\/\d{4}"
+								{% if question.errorMessage %}
+									data-validator-error-message="{{ question.errorMessage }}"
+						  	{% endif %}
+								{% if question.validationPattern %}
+									pattern="{{ question.validationPattern }}"
+								{% else %}
+									pattern="\d{2}\/\d{2}\/\d{4}"
+								{% endif %}
 								placeholder="{{ question.name | upper }} (DD/MM/YYYY)"
 								id="{{ question.handle }}"
 								name="questions[{{ question.handle }}][date]"

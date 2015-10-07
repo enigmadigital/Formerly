@@ -125,6 +125,9 @@ class Formerly_FormsController extends BaseController
 				$question->required 	= (bool) $postedQuestion['required'];
 				$question->type      	= $postedQuestion['type'];
 				$question->sortOrder 	= ++$sortOrder;
+				$question->errorMessage =  $postedQuestion['errorMessage'];
+				$question->validationPattern =  $postedQuestion['validationPattern'];
+
 
 				if (isset($postedQuestion['options']))
 				{

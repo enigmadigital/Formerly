@@ -21,9 +21,12 @@ class Formerly_FormModel extends BaseModel
 	}
 
 	public function getQuestionByHandle($handle) {
+		
 		foreach (craft()->formerly_forms->getQuestionsByFormId($this->id) as $question) {
-			if ($question->handle == $handle)
+			if ($question->handle == $handle) {
 				return $question;
+			}
+				
 		}
 		return null;
 	}

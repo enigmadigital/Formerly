@@ -233,7 +233,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		$tagsAllFound = true;
 		foreach ($matches[1] as $a ){
 			foreach ($qs as $q) {
-				if ($q->handle == $formHandle . '_' . $a) {
+				if (strstr($formHandle . '_' . $a, $q->handle)) {
 					//this is a valid twig field replace it with a temporary start and end tag
 					//(because we want to replace all non matches later with something so twig doesn't try to replace the nonmatches)
 					$formattedTemplate = str_replace("{" . $a . "}" , "@@@1" . $formHandle . '_' . $a . '1@@@', $formattedTemplate);

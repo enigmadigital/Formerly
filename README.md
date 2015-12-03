@@ -1,4 +1,4 @@
-# Formerly 1.4.0
+# Formerly 1.5.0
 
 ## Installing
 
@@ -55,6 +55,8 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 ```
 
 ## Updates
+  1.5.0
+  * HOT FIX - Submissions view not working in Craft 2.5. It now works. I haven't quite got the new settings filter working, but the priority was to get a release out there that works
   1.4.0
   * Add Customer error and validation pattern to question
   * collapse question details (with the extra fields it was getting out of control)

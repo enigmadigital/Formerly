@@ -26,7 +26,8 @@ class Formerly_SubmissionElementType extends BaseElementType
 		{
 			$sources[$form->id] = array(
 				'label'    => $form->name,
-				'criteria' => array('formId' => $form->id)
+				'criteria' => array('formId' => $form->id),
+				'key' => $form->id,
 			);
 		}
 
@@ -35,27 +36,37 @@ class Formerly_SubmissionElementType extends BaseElementType
 
 	public function defineTableAttributes($source = null)
 	{
-		$form = craft()->formerly_forms->getFormById($source);
+
+		$form = null;
+		$sourceId = -1;
+
+		if (isset($_POST['source'])) {
+			$sourceId = $_POST['source'];
+			$form = craft()->formerly_forms->getFormById($sourceId);
+		}
 
 		$attributes = array();
 
 		$attributes['id'] = 'ID';
 
-		if ($form)
+		foreach (craft()->formerly_forms->getAllForms() as $form)
 		{
-			foreach ($form->getQuestions() as $question)
-			{
-				if ($question->type != Formerly_QuestionType::MultilineText &&
-					$question->type != Formerly_QuestionType::CustomList &&
-					$question->type != Formerly_QuestionType::Assets &&
-					$question->type != Formerly_QuestionType::Checkboxes )
-				{
-					$attributes[$question->handle] = $question->name;
-				}
+			if ($sourceId == -1 || $sourceId == $form->id) {
+				foreach ($form->getQuestions() as $question) {
+					if ($question->type != Formerly_QuestionType::MultilineText &&
+						$question->type != Formerly_QuestionType::CustomList &&
+						$question->type != Formerly_QuestionType::Assets &&
+						$question->type != Formerly_QuestionType::Checkboxes
+					) {
+						if ($sourceId != -1)
+							$attributes[$question->handle] = $question->name;
+						else
+							$attributes[$question->handle] = $form->name . '-' . $question->name;
+					}
 
-				if (count($attributes) >= 5)
-				{
-					break;
+					if ($sourceId != -1 && count($attributes) >= 5) {
+						break;
+					}
 				}
 			}
 		}

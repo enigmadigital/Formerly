@@ -257,8 +257,9 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 		$result = str_replace("{id}", $submission->id, $result);
 		
-		if (count(craft()->config->get("siteUrl")) > 0) $result = str_replace("{siteUrl}", craft()->config->get("siteUrl")[CRAFT_LOCALE], $result);
-		else $result = str_replace("{siteUrl}", craft()->config->get("siteUrl"), $result);
+		$siteUrl = craft()->config->get("siteUrl");
+		if (is_array($siteUrl) && count($siteUrl) > 0) $result = str_replace("{siteUrl}", $siteUrl[CRAFT_LOCALE], $result);
+		else $result = str_replace("{siteUrl}", $siteUrl, $result);
 
 		return $result;
 	}

@@ -49,7 +49,10 @@ class Formerly_SubmissionsController extends BaseController
 
 			$asset = craft()->assets->getFileById($fileId);
 
-			$data = file_get_contents( $asset->url );
+			$serverPath = $asset->source->attributes['settings']['path'];
+
+			$data = file_get_contents( $serverPath . $asset->filename );
+
 			header("Content-type: " . $asset->mimeType );
 			header("Content-disposition: attachment;filename=" . $asset->filename);
 
@@ -58,6 +61,7 @@ class Formerly_SubmissionsController extends BaseController
 
 		return;
 	}
+
 
 	public function actionPostSubmission()
 	{

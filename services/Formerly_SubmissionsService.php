@@ -14,6 +14,7 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			'submission' => $submission
 		)));
 
+
 		if ($this->saveSubmission($submission))
 		{
 			//Find any multiline text fields and replace \n with break tags
@@ -79,8 +80,11 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 			'submission' => $submission
 		)));
 
+
 		if (!$submission->hasErrors())
 		{
+
+
 			//Check for honeypot
 			if (craft()->config->exists(Formerly_ConfigSettings::SettingsGroupName) &&
 				array_key_exists(Formerly_ConfigSettings::HoneyPotName, craft()->config->get(Formerly_ConfigSettings::SettingsGroupName))) {
@@ -98,8 +102,10 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
             }
 
 			$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
+
 			try {
 				if (craft()->elements->saveElement($submission)) {
+
 					$submissionRecord->id = $submission->id;
 
 					$submissionRecord->save(false);
@@ -227,39 +233,51 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		$formattedTemplate = $template;
 
 		//check that all the tags are valid before passing them to the template engine, otherwise it
-		//crashes with a obscure error
-		preg_match_all('/{([^}]*)}/', $template, $matches);
+		//crashes with an obscure error
+		preg_match_all('/{(.+?)(\||})/', $template, $matches);
+
 		$qs = $submission->getForm()->getQuestions();
 		$tagsAllFound = true;
 		foreach ($matches[1] as $a ){
 			foreach ($qs as $q) {
 				if (strstr($formHandle . '_' . $a, $q->handle)) {
+
+					//if multiple result field do replace now
+
 					//this is a valid twig field replace it with a temporary start and end tag
 					//(because we want to replace all non matches later with something so twig doesn't try to replace the nonmatches)
 					$formattedTemplate = str_replace("{" . $a . "}" , "@@@1" . $formHandle . '_' . $a . '1@@@', $formattedTemplate);
+					$formattedTemplate = str_replace("{" . $a . "|" , "@@@2" . $formHandle . '_' . $a . '2@@@', $formattedTemplate);
 					break;
 				}
 			}
 		}
 
 		//replace any stragglers
-		$formattedTemplate = str_replace("{" , "<<<", $formattedTemplate);
-		$formattedTemplate = str_replace("}" , ">>>", $formattedTemplate);
+		preg_match_all('/{(.+?)(\||})/', $template, $matches);
+		foreach ($matches[1] as $a ) {
+			$formattedTemplate = str_replace("{" . $a . "}", "<<<" . $a . '>>>', $formattedTemplate);
+		}
 
 		//fix up actual matches
 		$formattedTemplate = str_replace("@@@1" , "{", $formattedTemplate);
 		$formattedTemplate = str_replace("1@@@" , "}", $formattedTemplate);
+		$formattedTemplate = str_replace("@@@2" , "{", $formattedTemplate);
+		$formattedTemplate = str_replace("2@@@" , "|", $formattedTemplate);
 
 		$result = craft()->templates->renderObjectTemplate($formattedTemplate, $submission);
+
+
 		//put unmatched handles back the way they were
 		$result = str_replace('<<<', '{', $result);
 		$result = str_replace(">>>" , "}" , $result);
 
 		$result = str_replace("{id}", $submission->id, $result);
-		
+
 		$siteUrl = craft()->config->get("siteUrl");
 		if (is_array($siteUrl) && count($siteUrl) > 0) $result = str_replace("{siteUrl}", $siteUrl[CRAFT_LOCALE], $result);
 		else $result = str_replace("{siteUrl}", $siteUrl, $result);
+
 
 		return $result;
 	}

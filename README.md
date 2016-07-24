@@ -55,6 +55,8 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 ```
 
 ## Updates
+* 1.5.1
+  * Fix email template submission so twig filters can be used. This helps with a lot of reported issues. You can now format dates the way you want. And also output multi value fields like checkbox lists using {mycheckboxlist|join(',')}
 * 1.5.0
   * HOT FIX - Submissions view not working in Craft 2.5. It now works. I haven't quite got the new settings filter working, but the priority was to get a release out there that works
 * 1.4.0

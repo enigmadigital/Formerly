@@ -48,18 +48,22 @@ class Formerly_ExportController extends BaseController
 
             $fromDate = craft()->request->getPost('fromDate');
             $fromDate = DateTime::createFromString($fromDate, craft()->timezone);
+            $fromDate->setTime(0, 0, 0);
             $toDate = craft()->request->getPost('toDate');
             $toDate = DateTime::createFromString($toDate, craft()->timezone);
+            $toDate->setTime(23, 59, 59);
 
             $query->andWhere(DbHelper::parseDateParam('elements.dateCreated', '>= ' . $fromDate->format(DateTime::MYSQL_DATETIME), $query->params));
             $query->andWhere(DbHelper::parseDateParam('elements.dateCreated', '<= ' . $toDate->format(DateTime::MYSQL_DATETIME), $query->params));
         } elseif (isset($_POST['fromDate']) && !empty($_POST['fromDate']['date'])) {
             $fromDate = craft()->request->getPost('fromDate');
             $fromDate = DateTime::createFromString($fromDate, craft()->timezone);
+            $fromDate->setTime(0, 0, 0);
             $query->andWhere(DbHelper::parseDateParam('elements.dateCreated', '>= ' . $fromDate->format(DateTime::MYSQL_DATETIME), $query->params));
         } else if (isset($_POST['toDate']) && !empty($_POST['toDate']['date'])) {
             $toDate = craft()->request->getPost('toDate');
             $toDate = DateTime::createFromString($toDate, craft()->timezone);
+            $toDate->setTime(23, 59, 59);
             $query->andWhere(DbHelper::parseDateParam('elements.dateCreated', '<= ' . $toDate->format(DateTime::MYSQL_DATETIME), $query->params));
         }
 

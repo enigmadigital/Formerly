@@ -13,11 +13,12 @@
 - id {id} and {siteUrl} tag replacement to emails. id is replaced by submissionid, siteUrl by craft()->config->get("siteUrl")
 - comma listing bug in submission view
 - Add timezoneoffset setting to adjust mysql dates for charting (eg. add 10 hours for Sydney)
-    ```php
-    'formerly' => array(
-        'timezoneOffset' => '+10:00', //Australia/Sydney
-      ),
-    ```
+
+  ```php
+  'formerly' => array(
+      'timezoneOffset' => '+10:00', //Australia/Sydney
+    ),
+  ```
 
 ## [1.3.6]
 - Desktop widget
@@ -27,17 +28,19 @@
 - change settings back to use newer syntax
 - Add html markup to default email
 - add sendEmails flag, so you can disable email sending in an environment (eg. dev)
-      ```php
-      'formerly' => array(
-          'sendEmails' => false
-      ),
-      ```
+
+  ```php
+  'formerly' => array(
+      'sendEmails' => false
+  ),
+  ```
 - add writeEmailBodyToFilePath setting, logs emails in json format in the path specified
-      ```php
-      'formerly' => array(
-        'writeEmailBodyToFilePath' => '/vagrant/emails',
-      )
-      ```
+
+  ```php
+  'formerly' => array(
+    'writeEmailBodyToFilePath' => '/vagrant/emails',
+  )
+  ```
 
 ## [1.3.4]
 - Add to and from date filters to export

@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.5.2]
+- Merge PRs [#52](https://github.com/xodigital/Formerly/pull/52) [#53](https://github.com/xodigital/Formerly/pull/53) [#80](https://github.com/xodigital/Formerly/pull/80) [#81](https://github.com/xodigital/Formerly/pull/81) [#82](https://github.com/xodigital/Formerly/pull/82) [#83](https://github.com/xodigital/Formerly/pull/83)
+
 ## [1.5.1]
 - Fix email template submission so twig filters can be used. This helps with a lot of reported issues. You can now format dates the way you want. And also output multi value fields like checkbox lists using {mycheckboxlist|join(',')}
 

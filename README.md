@@ -43,13 +43,12 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 `competition` form who have selected Australia as their country:
 
 ```twig
-{% set submissions = craft.formerly.submissions
-  .form('competition')
+{% set submissions = craft.formerly.submissions('competition')
   .country('Australia')
   .sort('dateCreated desc') %}
 {% for submission in submissions %}
-  Name: {{ submission.name }}
-  Email: {{ submission.email }}
+  Name: {{ submission.formhandle_name }}
+  Email: {{ submission.formhandle_email }}
   {# ... #}
 {% endfor %}
 ```

@@ -151,31 +151,29 @@ class Formerly_FormsController extends BaseController
 
 		$ok = true;
 
-		if (craft()->formerly_forms->saveForm($form))
-		{
-			$existingQuestions = craft()->formerly_forms->getQuestionsByFormId($form->id, 'id');
-			$questionsToDelete = array_diff_key($existingQuestions, $questions);
-
-			foreach ($questionsToDelete as $question)
-			{
-				craft()->formerly_forms->deleteQuestion($question);
-			}
-
-			foreach ($questions as $question)
-			{
-				$question->formId    = $form->id;
-
-				if (!craft()->formerly_forms->saveQuestion($question))
-				{
-					$ok = false;
-
-					break;
-				}
-			}
-		}
-		else
+		if (!craft()->formerly_forms->saveForm($form))
 		{
 			$ok = false;
+		}
+		
+		$existingQuestions = craft()->formerly_forms->getQuestionsByFormId($form->id, 'id');
+		$questionsToDelete = array_diff_key($existingQuestions, $questions);
+
+		foreach ($questionsToDelete as $question)
+		{
+			craft()->formerly_forms->deleteQuestion($question);
+		}
+
+		foreach ($questions as $question)
+		{
+			$question->formId    = $form->id;
+
+			if (!craft()->formerly_forms->saveQuestion($question))
+			{
+				$ok = false;
+
+				break;
+			}
 		}
 
 		craft()->urlManager->setRouteVariables(array(
@@ -183,15 +181,13 @@ class Formerly_FormsController extends BaseController
 			'questions' => $questions,
 		));
 
-		if ($ok)
-		{
-			craft()->userSession->setNotice(Craft::t('Form saved.'));
-			$this->redirectToPostedUrl($form);
-		}
-		else
+		if (!$ok)
 		{
 			craft()->userSession->setError(Craft::t('Couldn’t save form.'));
 		}
+		
+		craft()->userSession->setNotice(Craft::t('Form saved.'));
+		$this->redirectToPostedUrl($form);
 	}
 
 	public function actionDeleteForm()

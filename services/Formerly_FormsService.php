@@ -55,6 +55,12 @@ class Formerly_FormsService extends BaseApplicationComponent
 		$formRecord->handle  = $form->handle;
 		$formRecord->emails  = $form->emails;
 
+		// set mailchimp attributes
+        $formRecord->mailchimp = (boolean) $form->mailchimp;
+        $formRecord->mailchimpUser = $form->mailchimpUser;
+        $formRecord->mailchimpApiKey = $form->mailchimpApiKey;
+        $formRecord->mailchimpListId = $form->mailchimpListId;
+
 		$transaction = craft()->db->getCurrentTransaction() === null ? craft()->db->beginTransaction() : null;
 		try
 		{
@@ -240,6 +246,7 @@ class Formerly_FormsService extends BaseApplicationComponent
 		$questionRecord->type	   = $question->type;
 		$questionRecord->errorMessage = $question->errorMessage;
 		$questionRecord->validationPattern = $question->validationPattern;
+		$questionRecord->mcVar = $question->mcVar;
 
 
 

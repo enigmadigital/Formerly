@@ -34,14 +34,38 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 
 			$this->sendSubmissionEmails($submission);
 
+			// Send mailchimp submission
+			$form = craft()->formerly_forms->getFormById($submission->formId);
+			$emailHandle = $form->handle . '_email';
+			if ($form->mailchimp && isset($submission->{$emailHandle})) {
+			    $apiKey = $form->mailchimpApiKey;
+			    $list = $form->mailchimpListId;
+
+			    // Get all merge tags
+                $vars = [];
+                foreach ($submission->getForm()->getQuestions() as $question) {
+                    if ($question->mcVar) {
+                        $vars[$question->mcVar] = $submission->getContent()->{$question->handle};
+                    }
+                }
+
+                // include mailchimp api class
+                require_once(CRAFT_PLUGINS_PATH.'formerly/vendor/mcapi/MCAPI.class.php');
+                $api = new \MCAPI($apiKey);
+                $api->listSubscribe($list, $vars['EMAIL'], $vars, 'html', false);
+
+                $success = true;
+                if ($api->errorCode) {
+                    $success = false;
+                }
+            }
+
 			$this->onPost(new Event($this, array(
 				'submission' => $submission
 			)));
 
-			return true;
+			return $success;
 		}
-
-
 
 		return false;
 	}
@@ -76,10 +100,9 @@ class Formerly_SubmissionsService extends BaseApplicationComponent
 		$submissionRecord->validate();
 		$submission->addErrors($submissionRecord->getErrors());
 
-		$this->onAfterValidate(new Event($this, array(
-			'submission' => $submission
-		)));
-
+        $this->onAfterValidate(new Event($this, array(
+            'submission' => $submission
+        )));
 
 		if (!$submission->hasErrors())
 		{

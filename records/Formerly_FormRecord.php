@@ -14,6 +14,10 @@ class Formerly_FormRecord extends BaseRecord
 			'name'          => array(AttributeType::Name, 'required' => true),
 			'handle'        => array(AttributeType::Handle, 'required' => true),
 			'emails'        => AttributeType::Mixed,
+            'mailchimp'     => AttributeType::Bool,
+            'mailchimpUser'  => AttributeType::String,
+            'mailchimpApiKey'  => AttributeType::String,
+            'mailchimpListId' => AttributeType::String,
 		);
 	}
 

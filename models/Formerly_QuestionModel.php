@@ -35,7 +35,8 @@ class Formerly_QuestionModel extends BaseModel
 				Formerly_QuestionType::Assets
 			)),
 			'options'       => AttributeType::Mixed,
-			'sortOrder'     => AttributeType::SortOrder
+			'sortOrder'     => AttributeType::SortOrder,
+            'mcVar' => AttributeType::String
 		);
 	}
 }

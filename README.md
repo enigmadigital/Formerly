@@ -53,6 +53,18 @@ regular `ElementCriteriaModel`s. For example, to list submissions to the
 {% endfor %}
 ```
 
+## Subscribe to Mailchimp Lists
+
+This function allows for subscribers to be directly subscribed to your mailchimp list.
+
+1. When adding a form, switch `ON` the Mailchimp toggle.
+2. Enter your Mailchimp username - used to sign in to mailchimp
+3. Enter your Mailchimp [API key](http://kb.mailchimp.com/integrations/api-integrations/about-api-keys)
+4. Enter your Mailchimp [List Id](http://kb.mailchimp.com/lists/manage-contacts/find-your-list-id)
+5. For each question, if you have a [Custom Merge Tag](http://kb.mailchimp.com/merge-tags/getting-started-with-merge-tags) set in Mailchimp, you must add it under `Mailchimp Merge Tag`
+
+Each submission will then be added to the list in Mailchimp
+
 ## Todo
 
 * Better validation

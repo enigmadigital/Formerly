@@ -49,6 +49,15 @@
 						{{'{' ~ (question ?  question.handle | replace({(emailPrefix) : ''})) ~ '}'}}
 					</div>
 				</div>
+
+				{{ forms.textField({
+				label: 'Mailchimp Merge Tag',
+				id: "questions-#{id}-mcVar",
+				name: "questions[#{id}][mcVar]",
+				value: question ? question.mcVar,
+				errors: question ? question.getErrors('mcVar'),
+				instructions: "*required if this form is submitting to a mailchimp list. Must match Mailchimp merge tag exactly.",
+				}) }}
 				{% endif %}
 
 				{{ forms.textField({
@@ -220,6 +229,38 @@
 			},
 			rows: form ? form.emails
 		}) }}
+
+		<hr>
+
+		<h2>MailChimp</h2>
+		{{ forms.lightswitch({
+			id: 'mailchimp',
+			name: 'mailchimp',
+			label: 'Enable Mailchimp submissions for this form',
+			on: form.mailchimp,
+			toggle: 'mailchimp-wrapper'
+		}) }}
+
+		<div id="mailchimp-wrapper" aria-hidden="true">
+			<p>Mailchimp Username</p>
+			{{ forms.text({
+			name: 'mailchimpUser',
+			id: 'mailchimpUser',
+			value: form.mailchimpUser
+			}) }}
+			<p>Mailchimp API Key</p>
+			{{ forms.text({
+			name: 'mailchimpApiKey',
+			id: 'mailchimpApiKey',
+			value: form.mailchimpApiKey
+			}) }}
+			<p>Mailchimp List Id</p>
+			{{ forms.text({
+			name: 'mailchimpListId',
+			id: 'mailchimpListId',
+			value: form.mailchimpListId
+			}) }}
+		</div>
 
 		<hr>
 

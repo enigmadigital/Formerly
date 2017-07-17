@@ -12,6 +12,10 @@ class Formerly_FormModel extends BaseModel
 			'instructions'  => AttributeType::String,
 			'handle'        => AttributeType::String,
 			'emails'        => AttributeType::Mixed,
+            'mailchimp'     => AttributeType::Bool,
+            'mailchimpUser'  => AttributeType::String,
+            'mailchimpApiKey'  => AttributeType::String,
+            'mailchimpListId' => AttributeType::String
 		);
 	}
 

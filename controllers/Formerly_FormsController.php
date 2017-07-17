@@ -105,6 +105,11 @@ class Formerly_FormsController extends BaseController
 		$form->handle  = craft()->request->getPost('handle');
 		$form->emails  = craft()->request->getPost('emails');
 
+		$form->mailchimp = craft()->request->getPost('mailchimp');
+		$form->mailchimpUser = craft()->request->getPost('mailchimpUser');
+        $form->mailchimpApiKey = craft()->request->getPost('mailchimpApiKey');
+        $form->mailchimpListId = craft()->request->getPost('mailchimpListId');
+
 		$postedQuestions = craft()->request->getPost('questions');
 		$sortOrder = 0;
 
@@ -127,6 +132,7 @@ class Formerly_FormsController extends BaseController
 				$question->sortOrder 	= ++$sortOrder;
 				$question->errorMessage =  $postedQuestion['errorMessage'];
 				$question->validationPattern =  $postedQuestion['validationPattern'];
+				$question->mcVar = $postedQuestion['mcVar'];
 
 
 				if (isset($postedQuestion['options']))

@@ -19,6 +19,7 @@ class Formerly_QuestionRecord extends BaseRecord
 			'sortOrder'     => array(AttributeType::SortOrder, 'required' => true),
 			'errorMessage'     => array(AttributeType::String),
 			'validationPattern'     => array(AttributeType::String),
+			'mcVar' => AttributeType::String,
 			'type'          => array(AttributeType::Enum, 'required' => true, 'values' => array(
 				Formerly_QuestionType::PlainText,
 				Formerly_QuestionType::MultilineText,
